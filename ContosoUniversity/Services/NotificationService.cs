@@ -1,34 +1,30 @@
 using System;
-using System.Messaging;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
 using ContosoUniversity.Models;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace ContosoUniversity.Services
 {
-    public class NotificationService
+    public class NotificationService : IDisposable
     {
         private readonly string _queuePath;
-        private readonly MessageQueue _queue;
+        private readonly IMessageQueue _messageQueue;
+        private readonly IConfiguration _configuration;
 
-        public NotificationService()
+        public NotificationService(IMessageQueue messageQueue, IConfiguration configuration)
         {
+            _messageQueue = messageQueue;
+            _configuration = configuration;
+
             // Get queue path from configuration or use default
-            _queuePath = ConfigurationManager.AppSettings["NotificationQueuePath"] ?? @".\Private$\ContosoUniversityNotifications";
-            
+            _queuePath = _configuration["AppSettings:NotificationQueuePath"] ?? @".\Private$\ContosoUniversityNotifications";
+
             // Ensure the queue exists
-            if (!MessageQueue.Exists(_queuePath))
+            if (!_messageQueue.Exists(_queuePath))
             {
-                _queue = MessageQueue.Create(_queuePath);
-                _queue.SetPermissions("Everyone", MessageQueueAccessRights.FullControl);
+                _messageQueue.Create(_queuePath);
             }
-            else
-            {
-                _queue = new MessageQueue(_queuePath);
-            }
-            
-            // Configure queue formatter
-            _queue.Formatter = new XmlMessageFormatter(new Type[] { typeof(string) });
         }
 
         public void SendNotification(string entityType, string entityId, EntityOperation operation, string userName = null)
@@ -36,7 +32,7 @@ namespace ContosoUniversity.Services
             SendNotification(entityType, entityId, null, operation, userName);
         }
 
-        public void SendNotification(string entityType, string entityId, string entityDisplayName, EntityOperation operation, string userName = null)
+        public void SendNotification(string entityType, string entityId, string? entityDisplayName, EntityOperation operation, string? userName = null)
         {
             try
             {
@@ -51,14 +47,8 @@ namespace ContosoUniversity.Services
                     IsRead = false
                 };
 
-                var jsonMessage = JsonConvert.SerializeObject(notification);
-                var message = new Message(jsonMessage)
-                {
-                    Label = $"{entityType} {operation}",
-                    Priority = MessagePriority.Normal
-                };
-
-                _queue.Send(message);
+                // Send notification via message queue abstraction
+                _messageQueue.SendAsync(notification, MessagePriority.Normal).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -67,18 +57,12 @@ namespace ContosoUniversity.Services
             }
         }
 
-        public Notification ReceiveNotification()
+        public Notification? ReceiveNotification()
         {
             try
             {
-                var message = _queue.Receive(TimeSpan.FromSeconds(1));
-                var jsonContent = message.Body.ToString();
-                return JsonConvert.DeserializeObject<Notification>(jsonContent);
-            }
-            catch (MessageQueueException ex) when (ex.MessageQueueErrorCode == MessageQueueErrorCode.IOTimeout)
-            {
-                // No messages available
-                return null;
+                var notification = _messageQueue.ReceiveAsync<Notification>(TimeSpan.FromSeconds(1)).GetAwaiter().GetResult();
+                return notification;
             }
             catch (Exception ex)
             {
@@ -114,7 +98,7 @@ namespace ContosoUniversity.Services
 
         public void Dispose()
         {
-            _queue?.Dispose();
+            // Message queue is managed by DI container
         }
     }
 }
