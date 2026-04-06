@@ -1,4 +1,4 @@
-@model System.Web.Mvc.HandleErrorInfo
+@model ContosoUniversity.Models.ErrorViewModel
 
 @{
     ViewBag.Title = "Error";
@@ -7,15 +7,10 @@
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
-@if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+@if (Model?.ShowRequestId == true)
 {
     <p>
-        <strong>Exception Details:</strong> @Model.Exception.Message
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
-    <p>
-        <strong>Controller:</strong> @Model.ControllerName
-    </p>
-    <p>
-        <strong>Action:</strong> @Model.ActionName
-    </p>
+}
 }
