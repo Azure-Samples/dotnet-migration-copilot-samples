@@ -211,22 +211,17 @@ namespace ContosoUniversity.Controllers
             Course course = db.Courses.Find(id);
             var courseTitle = course.Title;
             
-            // Delete associated image file if it exists
+            // Delete associated image from Azure Blob Storage if it exists
             if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath))
             {
-                var filePath = Server.MapPath(course.TeachingMaterialImagePath);
-                if (System.IO.File.Exists(filePath))
+                try
                 {
-                    try
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log the error but don't prevent deletion of the course
-                        // In a production application, you would log this error properly
-                        System.Diagnostics.Debug.WriteLine($"Error deleting file: {ex.Message}");
-                    }
+                    blobStorageService.DeleteBlobAsync(course.TeachingMaterialImagePath).Wait();
+                }
+                catch (Exception ex)
+                {
+                    // Log the error but don't prevent deletion of the course
+                    System.Diagnostics.Debug.WriteLine($"Error deleting blob: {ex.Message}");
                 }
             }
             
