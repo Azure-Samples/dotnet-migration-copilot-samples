@@ -2,7 +2,6 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
-using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -16,12 +15,12 @@ namespace ContosoUniversity.Services
         public BlobStorageService()
         {
             // Get configuration from Web.config
-            string endpoint = ConfigurationManager.AppSettings["AzureStorageBlob:Endpoint"];
+            string connectionString = ConfigurationManager.AppSettings["AzureStorageBlob:ConnectionString"];
             _containerName = ConfigurationManager.AppSettings["AzureStorageBlob:ContainerName"];
 
-            if (string.IsNullOrEmpty(endpoint))
+            if (string.IsNullOrEmpty(connectionString))
             {
-                throw new InvalidOperationException("AzureStorageBlob:Endpoint configuration is missing in Web.config");
+                throw new InvalidOperationException("AzureStorageBlob:ConnectionString configuration is missing in Web.config");
             }
 
             if (string.IsNullOrEmpty(_containerName))
@@ -29,10 +28,8 @@ namespace ContosoUniversity.Services
                 throw new InvalidOperationException("AzureStorageBlob:ContainerName configuration is missing in Web.config");
             }
 
-            // Create BlobServiceClient using DefaultAzureCredential for Managed Identity support
-            _blobServiceClient = new BlobServiceClient(
-                new Uri(endpoint),
-                new DefaultAzureCredential());
+            // Create BlobServiceClient using connection string
+            _blobServiceClient = new BlobServiceClient(connectionString);
 
             // Ensure container exists
             EnsureContainerExists();
