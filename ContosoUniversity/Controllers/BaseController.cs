@@ -10,6 +10,7 @@ namespace ContosoUniversity.Controllers
     {
         protected SchoolContext db;
         protected NotificationService notificationService = new NotificationService();
+        protected BlobStorageService blobStorageService = new BlobStorageService();
 
         public BaseController()
         {
@@ -41,6 +42,7 @@ namespace ContosoUniversity.Controllers
             {
                 db?.Dispose();
                 notificationService?.Dispose();
+                blobStorageService?.Dispose();
             }
             base.Dispose(disposing);
         }
