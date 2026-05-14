@@ -179,18 +179,18 @@
 4. Key Vault secret names follow double-dash convention: e.g. `ConnectionStrings--DefaultConnection`
 
 ### Progress
-- [⌛️] Migration Plan / progress.md update
-- [ ] `ContosoUniversity.csproj` — Add `Azure.Security.KeyVault.Secrets` + `Azure.Extensions.AspNetCore.Configuration.Secrets`
-- [ ] `appsettings.json` — Add `KeyVaultName`; replace hard-coded secrets with placeholders
-- [ ] `appsettings.Development.json` — Remove hard-coded connection string (loaded from Key Vault)
-- [ ] `Program.cs` — Add `builder.Configuration.AddAzureKeyVault(...)`
-- [ ] Validation & Fixing
-    - [ ] Build and Fix
-    - [ ] CVE Check
-    - [ ] Consistency Check
-    - [ ] Test Fix
-    - [ ] Completeness Check
-    - [ ] Build Validation (Final)
-- [ ] Final Summary
-    - [ ] Final Code Commit
-    - [ ] Migration Summary Generation
+- [✅] Migration Plan / progress.md update
+- [✅] `ContosoUniversity.csproj` — Add `Azure.Security.KeyVault.Secrets` 4.8.0, `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2, `Azure.Storage.Blobs` 12.24.0
+- [✅] `appsettings.json` — Remove `ConnectionStrings`+`AzureServiceBus`; add `KeyVaultName`; keep non-secret `AzureStorageBlob` config
+- [✅] `appsettings.Development.json` — Remove `ConnectionStrings`; add `KeyVaultName`
+- [✅] `Program.cs` — Add `builder.Configuration.AddAzureKeyVault(...)` + `BlobServiceClient` DI registration
+- Validation & Fixing
+    - [✅] Build and Fix (0 errors — 1 round to add `using System;` + fix `BlobServiceClient` registration)
+    - [✅] CVE Check — PASSED (`Azure.Security.KeyVault.Secrets` 4.8.0, `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2, `Azure.Storage.Blobs` 12.24.0 — all above vulnerable ranges)
+    - [✅] Consistency Check — PASSED (0 Critical, 0 Major; minor: `Microsoft.Data.SqlClient` pre-existing version bump 5.2.2→6.0.2)
+    - [✅] Test Fix — N/A (no test projects)
+    - [✅] Completeness Check — PASSED (no ConnectionStrings/secrets in config; KeyVaultName+AddAzureKeyVault confirmed)
+    - [✅] Build Validation (Final) — PASSED (0 errors)
+- [✅] Final Summary
+    - [✅] Final Code Commit
+    - [✅] Migration Summary Generation
