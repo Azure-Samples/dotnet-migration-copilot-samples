@@ -77,6 +77,32 @@
 
 ---
 
+## Local File I/O → Azure Blob Storage Migration (Session 20260514105229)
+
+**KB Used:** `dotnet-azure-storage-blob` (trust: 225.19) — exact match: local file system storage migration
+
+### Guidelines
+1. Use `BlobServiceClient` + `DefaultAzureCredential` (Managed Identity) — no connection strings or account keys
+2. Container client via `blobServiceClient.GetBlobContainerClient(containerName)`; create if not exists with `CreateIfNotExists()`
+3. Upload via `blobClient.Upload(stream, overwrite: true)`; delete via `blobClient.DeleteIfExists()`
+4. Store blob URI (`blobClient.Uri.ToString()`) instead of local file path in `TeachingMaterialImagePath`
+5. Extract blob name from stored URI using `Path.GetFileName(new Uri(path).LocalPath)`
+
+### Progress
+
+- [✅] Add NuGet package: `Azure.Storage.Blobs` 12.24.0
+- [✅] Update `appsettings.json` — Add `AzureStorageBlob` section (endpoint + container name)
+- [✅] Update `Program.cs` — Register `BlobServiceClient` singleton with `DefaultAzureCredential`
+- [✅] Rewrite `Controllers/CoursesController.cs` — Replace `System.IO.File`/`System.IO.Directory` with blob operations (8 incidents: Create×2, Edit×4, DeleteConfirmed×2)
+- [✅] Build Verification — PASSED (0 errors)
+- [✅] CVE Check — PASSED (Azure.Storage.Blobs 12.24.0 above affected < 12.13.0; all others above vulnerable ranges)
+- [✅] Consistency Check — PASSED (0 Critical, 0 Major — all file operations correctly translated to blob equivalents)
+- [✅] Completeness Check — PASSED (no System.IO.File, System.IO.Directory, IWebHostEnvironment, FileStream, or local path constructions remain)
+- [✅] Test Fix — N/A (no test projects; 0 tests)
+- [ ] Final Commit
+
+---
+
 # Migration Progress: Authentication → Azure Managed Identity (DefaultAzureCredential)
 
 **Migration Session ID:** 20260514105229
@@ -108,3 +134,63 @@
 - [✅] Final Summary
     - [✅] Final Code Commit (43fa5c9f7937c8e91a75f19bb7e61ecbba53227a)
     - [✅] Migration Summary Generation
+
+---
+
+## Azure SQL Database Connection Migration (Session 20260514105229)
+
+**KB Used:** `dotnet-azure-sql-database` (trust: 566.80) — exact match: Migrate SQL Server to Azure SQL with Managed Identity
+
+### Guidelines
+1. Use `Authentication=Active Directory Default` in connection string — no passwords or secrets
+2. Connection string format: `Server=tcp:<server>.database.windows.net,1433;Database=<db>;Authentication=Active Directory Default;TrustServerCertificate=True`
+3. Upgrade `Microsoft.Data.SqlClient` from 5.2.2 → 6.0.2 (recommended by KB)
+4. In production, connection string overridden by Azure Key Vault secret `ConnectionStrings--DefaultConnection`
+5. EF Core `UseSqlServer` is already correct — `Microsoft.Data.SqlClient` handles token acquisition automatically
+
+### Progress
+
+- [✅] Migration Plan (appended to progress.md)
+- [✅] Version Control Setup (branch `appmod/dotnet-migration-20260514105229` already active)
+- Code Migration
+    - [✅] `ContosoUniversity.csproj` — Upgrade `Microsoft.Data.SqlClient` 5.2.2 → 6.0.2
+    - [✅] `appsettings.json` — Add `ConnectionStrings.DefaultConnection` with Azure SQL format (tcp: prefix, port 1433, Authentication=Active Directory Default, TrustServerCertificate=True)
+    - [✅] `appsettings.Development.json` — Add `ConnectionStrings.DefaultConnection` with dev Azure SQL format
+    - [✅] `Program.cs` — Add `using System;` to fix pre-existing build error from Key Vault migration
+- Validation
+    - [✅] Build Verification — PASSED (0 errors, 98 pre-existing warnings)
+    - [✅] CVE Check — PASSED (all packages above affected version ranges)
+    - [✅] Consistency Check — PASSED (0 Critical, 0 Major, 0 Minor)
+    - [✅] Completeness Check — PASSED (no System.Data.SqlClient, Integrated Security=True, or password references remain)
+    - [✅] Test Fix — N/A (no test projects)
+    - [✅] Build Validation (Final) — PASSED
+- [✅] Final Commit
+
+---
+
+## Secrets → Azure Key Vault Migration (Session 20260514105229)
+
+**KB Used:** `dotnet-azure-keyvault-secret` (trust: 555.03) — exact match: Migrate secrets/connection strings to Azure Key Vault with DefaultAzureCredential
+
+### Guidelines
+1. Add `Azure.Security.KeyVault.Secrets` 4.8.0 and `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2 packages
+2. Add `KeyVaultName` to `appsettings.json`; remove hard-coded connection strings and service bus settings (loaded from Key Vault at runtime)
+3. Configure `Program.cs` to call `builder.Configuration.AddAzureKeyVault(...)` with `DefaultAzureCredential`
+4. Key Vault secret names follow double-dash convention: e.g. `ConnectionStrings--DefaultConnection`
+
+### Progress
+- [⌛️] Migration Plan / progress.md update
+- [ ] `ContosoUniversity.csproj` — Add `Azure.Security.KeyVault.Secrets` + `Azure.Extensions.AspNetCore.Configuration.Secrets`
+- [ ] `appsettings.json` — Add `KeyVaultName`; replace hard-coded secrets with placeholders
+- [ ] `appsettings.Development.json` — Remove hard-coded connection string (loaded from Key Vault)
+- [ ] `Program.cs` — Add `builder.Configuration.AddAzureKeyVault(...)`
+- [ ] Validation & Fixing
+    - [ ] Build and Fix
+    - [ ] CVE Check
+    - [ ] Consistency Check
+    - [ ] Test Fix
+    - [ ] Completeness Check
+    - [ ] Build Validation (Final)
+- [ ] Final Summary
+    - [ ] Final Code Commit
+    - [ ] Migration Summary Generation

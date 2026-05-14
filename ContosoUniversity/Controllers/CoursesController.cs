@@ -3,22 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using ContosoUniversity.Services;
+using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
 
 namespace ContosoUniversity.Controllers
 {
     public class CoursesController : BaseController
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BlobServiceClient _blobServiceClient;
+        private readonly string _blobContainerName;
 
-        public CoursesController(SchoolContext context, NotificationService notificationService, IWebHostEnvironment webHostEnvironment)
+        public CoursesController(SchoolContext context, NotificationService notificationService, BlobServiceClient blobServiceClient, IConfiguration configuration)
             : base(context, notificationService)
         {
-            _webHostEnvironment = webHostEnvironment;
+            _blobServiceClient = blobServiceClient;
+            _blobContainerName = configuration.GetValue<string>("AzureStorageBlob:ContainerName") ?? "teaching-materials";
         }
 
         // GET: Courses
@@ -79,20 +82,17 @@ namespace ContosoUniversity.Controllers
 
                     try
                     {
-                        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "TeachingMaterials");
-                        if (!Directory.Exists(uploadsPath))
-                        {
-                            Directory.CreateDirectory(uploadsPath);
-                        }
+                        var containerClient = _blobServiceClient.GetBlobContainerClient(_blobContainerName);
+                        containerClient.CreateIfNotExists();
 
                         var fileName = $"course_{course.CourseID}_{Guid.NewGuid()}{fileExtension}";
-                        var filePath = Path.Combine(uploadsPath, fileName);
+                        var blobClient = containerClient.GetBlobClient(fileName);
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        using (var stream = teachingMaterialImage.OpenReadStream())
                         {
-                            teachingMaterialImage.CopyTo(stream);
+                            blobClient.Upload(stream, overwrite: true);
                         }
-                        course.TeachingMaterialImagePath = $"/Uploads/TeachingMaterials/{fileName}";
+                        course.TeachingMaterialImagePath = blobClient.Uri.ToString();
                     }
                     catch (Exception ex)
                     {
@@ -156,29 +156,24 @@ namespace ContosoUniversity.Controllers
 
                     try
                     {
-                        var uploadsPath = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "TeachingMaterials");
-                        if (!Directory.Exists(uploadsPath))
-                        {
-                            Directory.CreateDirectory(uploadsPath);
-                        }
+                        var containerClient = _blobServiceClient.GetBlobContainerClient(_blobContainerName);
+                        containerClient.CreateIfNotExists();
 
                         var fileName = $"course_{course.CourseID}_{Guid.NewGuid()}{fileExtension}";
-                        var filePath = Path.Combine(uploadsPath, fileName);
+                        var blobClient = containerClient.GetBlobClient(fileName);
 
-                        if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath))
+                        if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath)
+                            && Uri.IsWellFormedUriString(course.TeachingMaterialImagePath, UriKind.Absolute))
                         {
-                            var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, course.TeachingMaterialImagePath.TrimStart('/'));
-                            if (System.IO.File.Exists(oldFilePath))
-                            {
-                                System.IO.File.Delete(oldFilePath);
-                            }
+                            var oldBlobName = Path.GetFileName(new Uri(course.TeachingMaterialImagePath).LocalPath);
+                            containerClient.GetBlobClient(oldBlobName).DeleteIfExists();
                         }
 
-                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        using (var stream = teachingMaterialImage.OpenReadStream())
                         {
-                            teachingMaterialImage.CopyTo(stream);
+                            blobClient.Upload(stream, overwrite: true);
                         }
-                        course.TeachingMaterialImagePath = $"/Uploads/TeachingMaterials/{fileName}";
+                        course.TeachingMaterialImagePath = blobClient.Uri.ToString();
                     }
                     catch (Exception ex)
                     {
@@ -220,19 +215,18 @@ namespace ContosoUniversity.Controllers
             Course course = db.Courses.Find(id);
             var courseTitle = course.Title;
 
-            if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath))
+            if (!string.IsNullOrEmpty(course.TeachingMaterialImagePath)
+                && Uri.IsWellFormedUriString(course.TeachingMaterialImagePath, UriKind.Absolute))
             {
-                var filePath = Path.Combine(_webHostEnvironment.WebRootPath, course.TeachingMaterialImagePath.TrimStart('/'));
-                if (System.IO.File.Exists(filePath))
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_blobContainerName);
+                var blobName = Path.GetFileName(new Uri(course.TeachingMaterialImagePath).LocalPath);
+                try
                 {
-                    try
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Error deleting file: {ex.Message}");
-                    }
+                    containerClient.GetBlobClient(blobName).DeleteIfExists();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error deleting blob: {ex.Message}");
                 }
             }
 

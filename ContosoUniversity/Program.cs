@@ -1,3 +1,7 @@
+using System;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
+using Azure.Storage.Blobs;
 using ContosoUniversity.Data;
 using ContosoUniversity.Services;
 using Microsoft.AspNetCore.Builder;
@@ -9,12 +13,28 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Azure Key Vault as a configuration source
+var keyVaultName = builder.Configuration["KeyVaultName"];
+if (!string.IsNullOrEmpty(keyVaultName))
+{
+    var keyVaultUri = new Uri($"https://{keyVaultName}.vault.azure.net/");
+    builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential());
+}
+
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
-// Register EF Core DbContext
+// Register EF Core DbContext (connection string loaded from Key Vault at runtime)
 builder.Services.AddDbContext<SchoolContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register Azure Blob Storage client with Managed Identity (endpoint from configuration)
+var blobEndpoint = builder.Configuration["AzureStorageBlob:Endpoint"];
+if (!string.IsNullOrEmpty(blobEndpoint))
+{
+    builder.Services.AddSingleton(_ =>
+        new BlobServiceClient(new Uri(blobEndpoint), new DefaultAzureCredential()));
+}
 
 // Register NotificationService as a singleton (Azure Service Bus via DefaultAzureCredential)
 builder.Services.AddSingleton<NotificationService>();
