@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace ContosoUniversity.Data
 {
     public static class SchoolContextFactory
     {
-        public static SchoolContext Create()
+        public static SchoolContext Create(IConfiguration configuration)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
             var optionsBuilder = new DbContextOptionsBuilder<SchoolContext>();
             optionsBuilder.UseSqlServer(connectionString);
             
@@ -15,3 +15,4 @@ namespace ContosoUniversity.Data
         }
     }
 }
+

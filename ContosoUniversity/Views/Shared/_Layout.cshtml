@@ -4,24 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Contoso University</title>
-    @Styles.Render("~/Content/css")
-    <link href="~/Content/notifications.css" rel="stylesheet" />
-    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/notifications.css" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            @Html.ActionLink("Contoso University", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand">Contoso University</a>
                         
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Students", "Index", "Students", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Courses", "Index", "Courses", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Instructors", "Index", "Instructors", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Departments", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Notifications", "Index", "Notifications", null, new { @class = "nav-link", title = "Notification Dashboard" })</li>
+                    <li class="nav-item"><a asp-controller="Home" asp-action="Index" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a asp-controller="Home" asp-action="About" class="nav-link">About</a></li>
+                    <li class="nav-item"><a asp-controller="Students" asp-action="Index" class="nav-link">Students</a></li>
+                    <li class="nav-item"><a asp-controller="Courses" asp-action="Index" class="nav-link">Courses</a></li>
+                    <li class="nav-item"><a asp-controller="Instructors" asp-action="Index" class="nav-link">Instructors</a></li>
+                    <li class="nav-item"><a asp-controller="Departments" asp-action="Index" class="nav-link">Departments</a></li>
+                    <li class="nav-item"><a asp-controller="Notifications" asp-action="Index" class="nav-link" title="Notification Dashboard">Notifications</a></li>
                 </ul>
             </div>
         </div>
@@ -34,9 +34,11 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/Scripts/notifications.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.21.0/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@4.0.0/dist/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/notifications.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

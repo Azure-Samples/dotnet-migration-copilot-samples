@@ -1,0 +1,315 @@
+{
+  "tasks": [
+    {
+      "id": "task-1",
+      "type": "upgrade",
+      "title": "Upgrade .NET Framework 4.8 to .NET 10",
+      "description": "Convert the ASP.NET MVC 5 application from .NET Framework 4.8 to ASP.NET Core on .NET 10. Includes project file conversion, package migration, middleware pipeline setup, EF Core migration, and Razor view updates.",
+      "skill": "builtin:dotnet-upgrade",
+      "category": "Framework Upgrade",
+      "severity": "mandatory",
+      "target": {
+        "current_framework": ".NETFramework,Version=v4.8",
+        "target_framework": "net10.0"
+      },
+      "incidents": [],
+      "filesAffected": [
+        "ContosoUniversity.csproj",
+        "packages.config",
+        "Web.config",
+        "Global.asax",
+        "Global.asax.cs",
+        "Controllers/*.cs",
+        "Views/**/*.cshtml",
+        "Models/*.cs",
+        "Data/*.cs",
+        "App_Start/*.cs"
+      ],
+      "dependencies": [],
+      "successCriteria": "Application compiles and runs on .NET 10 with all existing functionality preserved",
+      "status": "pending"
+    },
+    {
+      "id": "task-2",
+      "type": "cloud-migration",
+      "title": "Migrate MSMQ to Azure Service Bus",
+      "description": "Replace System.Messaging.MessageQueue (MSMQ) usage in NotificationService with Azure.Messaging.ServiceBus. Replace XmlMessageFormatter with JSON serialization and configure Service Bus access via DefaultAzureCredential.",
+      "skill": "dotnet-azure-servicebus",
+      "category": "Queue",
+      "severity": "mandatory",
+      "ruleId": "Queue.0003",
+      "target": {
+        "from": "System.Messaging.MessageQueue (MSMQ)",
+        "to": "Azure.Messaging.ServiceBus"
+      },
+      "incidents": [
+        {
+          "incidentId": "efa216b2-6628-463b-8a8d-d29eb8011944",
+          "location": "Services/NotificationService.cs",
+          "line": 21,
+          "snippet": "System.Messaging.MessageQueue"
+        },
+        {
+          "incidentId": "8193c7d5-9eff-4feb-82bb-546821534b32",
+          "location": "Services/NotificationService.cs",
+          "line": 26,
+          "snippet": "System.Messaging.MessageQueue"
+        },
+        {
+          "incidentId": "e34bba0e-418d-4faf-b1b4-71ecbc734765",
+          "location": "Services/NotificationService.cs",
+          "line": 30,
+          "snippet": "System.Messaging.XmlMessageFormatter"
+        },
+        {
+          "incidentId": "63ed7e4f-3185-40b0-97f5-2f3e3e130709",
+          "location": "Services/NotificationService.cs",
+          "line": 22,
+          "snippet": "System.Messaging.MessageQueueAccessRights"
+        },
+        {
+          "incidentId": "52843c11-b423-4efe-a607-1028b921cacb",
+          "location": "Services/NotificationService.cs",
+          "line": 19,
+          "snippet": "System.Messaging.MessageQueue"
+        }
+      ],
+      "filesAffected": [
+        "Services/NotificationService.cs"
+      ],
+      "dependencies": [
+        "task-1"
+      ],
+      "successCriteria": "All MSMQ references removed; notifications sent/received via Azure Service Bus with DefaultAzureCredential",
+      "status": "pending"
+    },
+    {
+      "id": "task-3",
+      "type": "cloud-migration",
+      "title": "Migrate Authentication to Managed Identity",
+      "description": "Replace connection-string-based and Windows authentication with Azure Managed Identity using DefaultAzureCredential. Configure all Azure service connections to use token-based authentication.",
+      "skill": "dotnet-managed-identity",
+      "category": "Identity",
+      "severity": "mandatory",
+      "ruleId": "Identity.0002",
+      "target": {
+        "from": "Windows authentication / connection string auth",
+        "to": "Azure Managed Identity (DefaultAzureCredential)"
+      },
+      "incidents": [
+        {
+          "incidentId": "10c96015-cf9a-4e3b-85bb-4a17b0e053d8",
+          "location": "Web.config",
+          "snippet": "<add name=\"DefaultConnection\" />"
+        }
+      ],
+      "filesAffected": [
+        "Web.config"
+      ],
+      "dependencies": [
+        "task-1"
+      ],
+      "successCriteria": "No passwords or secrets in connection strings; all Azure services accessed via Managed Identity",
+      "status": "pending"
+    },
+    {
+      "id": "task-4",
+      "type": "cloud-migration",
+      "title": "Migrate Local File I/O to Azure Storage",
+      "description": "Replace System.IO.File and System.IO.Directory usage in CoursesController with Azure Blob Storage or mounted storage paths. Update file upload/download handling to use BlobServiceClient with DefaultAzureCredential.",
+      "skill": "dotnet-azure-storage-blob",
+      "category": "Local",
+      "severity": "potential",
+      "ruleId": "Local.0003",
+      "target": {
+        "from": "System.IO.File / System.IO.Directory (local file system)",
+        "to": "Azure Blob Storage or Azure Storage mount"
+      },
+      "incidents": [
+        {
+          "incidentId": "a0c9305c-f7ab-4215-acac-a4e7e97380e3",
+          "location": "Controllers/CoursesController.cs",
+          "line": 76,
+          "snippet": "System.IO.Directory"
+        },
+        {
+          "incidentId": "cdf5de15-2709-46ca-89ad-612ac7d493c9",
+          "location": "Controllers/CoursesController.cs",
+          "line": 78,
+          "snippet": "System.IO.Directory"
+        },
+        {
+          "incidentId": "8e42661a-16ee-4e47-a4ce-ba0dad6c9e46",
+          "location": "Controllers/CoursesController.cs",
+          "line": 159,
+          "snippet": "System.IO.Directory"
+        },
+        {
+          "incidentId": "7514c406-42ec-4fc6-94a4-d6ea973cfa51",
+          "location": "Controllers/CoursesController.cs",
+          "line": 161,
+          "snippet": "System.IO.Directory"
+        },
+        {
+          "incidentId": "8e33f3b8-d19b-41a0-a48d-7ca952ac622b",
+          "location": "Controllers/CoursesController.cs",
+          "line": 172,
+          "snippet": "System.IO.File"
+        },
+        {
+          "incidentId": "4dbc4e16-071c-4659-b7a0-ccb8695b7100",
+          "location": "Controllers/CoursesController.cs",
+          "line": 174,
+          "snippet": "System.IO.File"
+        },
+        {
+          "incidentId": "f35a8b1d-69e0-4bc1-b660-615b41d5ab9d",
+          "location": "Controllers/CoursesController.cs",
+          "line": 229,
+          "snippet": "System.IO.File"
+        },
+        {
+          "incidentId": "df2634d6-58ed-469b-8094-bd5897ab5fbb",
+          "location": "Controllers/CoursesController.cs",
+          "line": 233,
+          "snippet": "System.IO.File"
+        }
+      ],
+      "filesAffected": [
+        "Controllers/CoursesController.cs"
+      ],
+      "dependencies": [
+        "task-1",
+        "task-3"
+      ],
+      "successCriteria": "All file operations use Azure Blob Storage or mounted storage; files persist across app restarts and scale-out",
+      "status": "pending"
+    },
+    {
+      "id": "task-5",
+      "type": "cloud-migration",
+      "title": "Migrate Secrets to Azure Key Vault",
+      "description": "Move connection strings and app settings from Web.config to Azure Key Vault. Configure ASP.NET Core to load secrets from Key Vault via Azure.Extensions.AspNetCore.Configuration.Secrets with DefaultAzureCredential.",
+      "skill": "dotnet-azure-keyvault-secret",
+      "category": "Security",
+      "severity": "optional",
+      "ruleId": "Security.0002",
+      "target": {
+        "from": "Secrets in Web.config (appSettings, connectionStrings)",
+        "to": "Azure Key Vault"
+      },
+      "incidents": [
+        {
+          "incidentId": "6c136b01-e007-4147-ba6d-ee5362412ee8",
+          "location": "Web.config",
+          "snippet": "<appSettings />"
+        },
+        {
+          "incidentId": "517dbf2e-9f4e-4e10-9121-f828907d94fc",
+          "location": "Web.config",
+          "snippet": "<connectionStrings />"
+        }
+      ],
+      "filesAffected": [
+        "Web.config"
+      ],
+      "dependencies": [
+        "task-1",
+        "task-3"
+      ],
+      "successCriteria": "No secrets in configuration files or source code; all secrets retrieved from Azure Key Vault at runtime",
+      "status": "pending"
+    },
+    {
+      "id": "task-6",
+      "type": "cloud-migration",
+      "title": "Configure Azure SQL Database",
+      "description": "Migrate the SQL Server database connection to Azure SQL Database. Update DefaultConnection configuration and configure Entity Framework Core to use Managed Identity for Azure SQL authentication.",
+      "skill": "dotnet-azure-sql-database",
+      "category": "Database",
+      "severity": "potential",
+      "ruleId": "Database.0002",
+      "target": {
+        "from": "On-premises SQL Server with connection string",
+        "to": "Azure SQL Database with Managed Identity"
+      },
+      "incidents": [
+        {
+          "incidentId": "764b27bd-807d-44bb-ba6f-add7904229d8",
+          "location": "Web.config",
+          "snippet": "<add name=\"DefaultConnection\" />"
+        }
+      ],
+      "filesAffected": [
+        "Web.config",
+        "Data/SchoolContext.cs"
+      ],
+      "dependencies": [
+        "task-1",
+        "task-3"
+      ],
+      "successCriteria": "Application connects to Azure SQL Database via Managed Identity; all queries and migrations work on Azure SQL",
+      "status": "pending"
+    },
+    {
+      "id": "task-7",
+      "type": "optimization",
+      "title": "Move Static Content to Azure CDN",
+      "description": "Move static files (CSS, JavaScript, images) from the application to Azure Blob Storage with Azure CDN for improved performance, reduced costs, and independent content updates.",
+      "skill": "manual",
+      "category": "Scale",
+      "severity": "optional",
+      "ruleId": "Scale.0001",
+      "target": {
+        "from": "Static files bundled in project (Content/, Scripts/)",
+        "to": "Azure Blob Storage + Azure CDN"
+      },
+      "incidents": [
+        {
+          "incidentId": "f0e3c2b1-0a47-4046-b5bd-ff21956d2f4f",
+          "location": "ContosoUniversity.csproj",
+          "snippet": "16 static files detected (CSS, JS, images)"
+        }
+      ],
+      "filesAffected": [
+        "Content/bootstrap.css",
+        "Content/bootstrap.min.css",
+        "Content/Site.css",
+        "Scripts/bootstrap.js",
+        "Scripts/bootstrap.min.js",
+        "Scripts/jquery-3.4.1.js",
+        "Scripts/jquery-3.4.1.min.js",
+        "Scripts/jquery.validate.js",
+        "Scripts/jquery.validate.min.js",
+        "Scripts/jquery.validate.unobtrusive.js",
+        "Scripts/jquery.validate.unobtrusive.min.js",
+        "Scripts/modernizr-2.6.2.js",
+        "Scripts/respond.js",
+        "Scripts/respond.min.js",
+        "favicon.ico"
+      ],
+      "dependencies": [
+        "task-1"
+      ],
+      "successCriteria": "Static files served via CDN with improved load times",
+      "status": "pending"
+    }
+  ],
+  "metadata": {
+    "language": "dotnet",
+    "planName": "ContosoUniversity Modernization Plan",
+    "projectName": "ContosoUniversity",
+    "sourceFramework": ".NETFramework,Version=v4.8",
+    "targetFramework": "net10.0",
+    "assessmentReport": ".github/modernize/assessment/reports/report-20260514104511/report.json",
+    "createdAt": "2026-05-14T10:49:00Z",
+    "version": "1.0",
+    "totalTasks": 7,
+    "totalIncidents": 25,
+    "severityBreakdown": {
+      "mandatory": 3,
+      "potential": 2,
+      "optional": 2
+    }
+  }
+}
