@@ -5,7 +5,7 @@
 
 ## 1. Migration Improvements
 
-Successfully migrated from ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.NET 10). The migration replaces the legacy `System.Web`-based request pipeline with the ASP.NET Core middleware pipeline, replaces `Web.config`/`Global.asax` with `Program.cs`/`appsettings.json`, upgrades Entity Framework 6 to EF Core 9.0.5, replaces MSMQ (`System.Messaging`) with a thread-safe in-memory notification queue, and updates all Razor views from Bundle/Script helpers to CDN-based static file references and Tag Helpers. All dependencies, configuration, and implementation code have been updated.
+Successfully migrated from ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.NET 10), then further migrated the notification subsystem from MSMQ (and interim in-memory queue) to Azure Service Bus. The migration replaces the legacy `System.Web`-based request pipeline with the ASP.NET Core middleware pipeline, replaces `Web.config`/`Global.asax` with `Program.cs`/`appsettings.json`, upgrades Entity Framework 6 to EF Core 9.0.5, replaces `System.Messaging.MessageQueue` (MSMQ) with `Azure.Messaging.ServiceBus.ServiceBusClient` authenticated via `DefaultAzureCredential`, and uses `Newtonsoft.Json` for message serialization. All dependencies, configuration, and implementation code have been updated.
 
 | Area | Before | After | Improvement |
 |------|--------|-------|-------------|
@@ -14,24 +14,24 @@ Successfully migrated from ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.
 | App Entry Point | `Global.asax` / `Global.asax.cs` | `Program.cs` | Unified startup with DI and middleware |
 | Configuration | `Web.config` (XML) | `appsettings.json` + `IConfiguration` | JSON-based, environment-aware, no config transforms |
 | Data Access | Entity Framework 6 | Entity Framework Core 9.0.5 | LINQ improvements, async support, .NET 10 compatible |
-| Messaging Queue | MSMQ (`System.Messaging`) | In-memory `ConcurrentQueue<T>` (singleton DI) | Runs on Linux/Docker/.NET Core; no Windows service dependency |
-| Dependency Injection | Manual factory pattern (`SchoolContextFactory.Create()`) | Constructor DI via `builder.Services.AddDbContext<>` | Standard ASP.NET Core DI container |
+| Messaging Queue | MSMQ (`System.Messaging.MessageQueue`) + `XmlMessageFormatter` | Azure Service Bus (`Azure.Messaging.ServiceBus`) + JSON serialization | Cloud-native; cross-platform; no Windows service dependency |
+| Authentication & Security | N/A (local MSMQ, no auth) | `DefaultAzureCredential` (Managed Identity) — no connection strings or secrets | Passwordless; works with local az login, Managed Identity, and env credentials |
+| Dependency Injection | Manual factory pattern (`SchoolContextFactory.Create()`) | Constructor DI via `builder.Services.AddDbContext<>` / `AddSingleton<NotificationService>` | Standard ASP.NET Core DI container |
 | Razor Views | `@Scripts.Render` / `@Styles.Render` bundle helpers | CDN `<script>` / `<link>` tags + `<partial name="_ValidationScriptsPartial" />` | No bundle compilation at startup; CDN-cached assets |
-| Tag Helpers | None (all `@Html.ActionLink`) | `asp-controller` / `asp-action` Tag Helpers | Cleaner, HTML-like syntax in views |
 | Static Files | Under app root (`Content/`, `Scripts/`) | Under `wwwroot/css/`, `wwwroot/js/` | Proper static file serving via `UseStaticFiles()` |
 | File Uploads | `HttpPostedFileBase` + `Server.MapPath` | `IFormFile` + `IWebHostEnvironment.WebRootPath` | Modern API; testable; no `HttpContext.Server` dependency |
-| Maintainability | Mixed legacy patterns | Uniform ASP.NET Core patterns | Easier onboarding; compatible with modern tooling |
+| Maintainability | Mixed legacy patterns | Uniform ASP.NET Core + Azure SDK patterns | Easier onboarding; compatible with modern tooling |
 
 ## 2. Build and Validation
 
-All source files successfully compiled with .NET 10 / ASP.NET Core dependencies. No test projects exist in the solution (0 tests — N/A). Build errors (6 total) were identified and fixed in a single round: missing ASP.NET Core `using` directives in `Program.cs`, `TryUpdateModel` unavailability replaced with manual field binding, and one missed `@Scripts.Render` in `Views/Departments/Create.cshtml`.
+All source files successfully compiled with .NET 10 / ASP.NET Core + Azure Service Bus dependencies. No test projects exist in the solution (0 tests — N/A). Build completed in 5.85 s with zero errors.
 
 #### Build Validation
 | Field | Value |
 |-------|-------|
 | Status | ✅ Success |
 | Build Tool | dotnet build (MSBuild) |
-| Result | 1/1 projects built successfully, 0 errors, 106 warnings (nullable reference type warnings — non-blocking) |
+| Result | 1/1 projects built successfully, 0 errors, 98 warnings (nullable reference type warnings — non-blocking, pre-existing) |
 
 #### Test Validation
 | Field | Value |
@@ -40,28 +40,30 @@ All source files successfully compiled with .NET 10 / ASP.NET Core dependencies.
 | Total Tests | 0 |
 | Passed | 0 |
 | Failed | 0 |
-| Test Framework | xUnit (no test project in solution) |
+| Test Framework | N/A (no test project in solution) |
 
 #### Code Quality Validation
 | Check | Status | Details |
 |-------|--------|---------|
-| CVE Scan | ✅ Success | `Newtonsoft.Json 13.0.3` is above affected range (<13.0.1). EF Core 9.0.5 packages have no known CVEs. |
-| Consistency Check | ✅ Success | 0 Critical, 0 Major, 3 Minor (non-blocking): `HomeController.Unauthorized()` hides inherited member; nullable warnings; in-memory queue vs MSMQ persistence (intentional) |
-| Completeness Check | ✅ Success | 0 issues found — no `System.Web`, `System.Messaging`, `Scripts.Render`, `ConfigurationManager`, `HttpPostedFileBase`, or legacy `.csproj` references remain |
+| CVE Scan | ✅ Success | `Azure.Identity 1.14.0` — all CVEs affect < 1.11.4; `Azure.Messaging.ServiceBus 7.19.0` — no CVEs; `Newtonsoft.Json 13.0.3` — above affected range (< 13.0.1) |
+| Consistency Check | ✅ Success | 0 Critical, 0 Major, 0 Minor — behavioral contracts fully preserved |
+| Completeness Check | ✅ Success | 0 issues — no `System.Messaging`, `MessageQueue`, `XmlMessageFormatter`, `ConcurrentQueue`, or MSMQ path config references remain |
 
 ## 3. Recommended Next Steps
 
 I. **Deploy to Azure**: Refer to Azure App Service deployment documentation for ASP.NET Core .NET 10 applications. Publish using `dotnet publish` and deploy via Azure CLI, GitHub Actions, or Visual Studio.
 
-II. **Configure Azure Resources**: Update `appsettings.json` (or Azure App Service Application Settings) with the production `DefaultConnection` SQL connection string targeting Azure SQL Database.
+II. **Provision Azure Service Bus**: Create the Service Bus namespace and queue `contoso-notifications`, then update `AzureServiceBus:FullyQualifiedNamespace` in `appsettings.json` or App Service Application Settings.
 
-III. **Migrate MSMQ to Azure Service Bus**: The current in-memory notification queue is functional but non-persistent. For production, migrate `NotificationService` to `Azure.Messaging.ServiceBus.ServiceBusClient` using Managed Identity (`DefaultAzureCredential`).
+III. **Assign RBAC Role**: Grant the app's Managed Identity the `Azure Service Bus Data Owner` (or `Data Sender` + `Data Receiver`) role on the Service Bus namespace.
 
-IV. **Migrate File Uploads to Azure Blob Storage**: `CoursesController` currently writes teaching materials to `wwwroot/Uploads/`. In a scaled-out or containerized deployment, migrate file I/O to `Azure.Storage.Blobs.BlobServiceClient`.
+IV. **Configure Azure SQL**: Update the `DefaultConnection` string to target Azure SQL Database using `Authentication=Active Directory Default` for full passwordless access.
 
-V. **Create Pull Request**: After verifying the changes locally, submit branch `appmod/dotnet-migration-20260514105229` for code review before merging to `main`.
+V. **Migrate File Uploads to Azure Blob Storage**: `CoursesController` currently writes teaching materials to `wwwroot/Uploads/`. In a scaled-out or containerized deployment, migrate file I/O to `Azure.Storage.Blobs.BlobServiceClient`.
 
-VI. **Save as Custom Skill**: To reuse this migration pattern in other projects, save as `My Skill` from the `Tasks` section in the sidebar.
+VI. **Create Pull Request**: After verifying the changes locally, submit branch `appmod/dotnet-migration-20260514105229` for code review before merging to `main`.
+
+VII. **Save as Custom Skill**: To reuse this migration pattern in other projects, save as `My Skill` from the `Tasks` section in the sidebar.
 
 ## 4. Additional Details
 
@@ -70,23 +72,24 @@ VI. **Save as Custom Skill**: To reuse this migration pattern in other projects,
 #### Project Details
 | Field | Value |
 |-------|-------|
-| Session ID | `df0090f3-bf51-4f7b-b2bf-61beb7ab6971` |
+| Session ID | `20260514105229` |
 | Migration executed by | xuycao |
 | Migration performed by | GitHub Copilot |
 | Project Pathname | C:\Users\xuycao\dev\testrepo\dotnet-migration-copilot-samples\ContosoUniversity |
 | Language | Dotnet |
-| Files modified | 39 |
+| Files modified | 42 |
 | Branch created | `appmod/dotnet-migration-20260514105229` |
 
 #### Version Control Summary
 | Field | Value |
 |-------|-------|
 | Version Control System | Git |
-| Total Commits | 1 |
+| Total Commits | 2 |
 | Uncommitted Changes | None |
 
 **Commits:**
-1. Code migration completed: ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.NET 10) - SDK-style csproj, Program.cs, appsettings.json, EF Core 9, MSMQ→in-memory queue, all controllers/views updated (c390b4869d885692d593e1ac0a6186517c6a1da1)
+1. Code migration completed: ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.NET 10) - SDK-style csproj, Program.cs, appsettings.json, EF Core 9, MSMQ→in-memory queue, all controllers/views updated (c390b48)
+2. Code migration completed: MSMQ to Azure Service Bus - Replace System.Messaging/ConcurrentQueue with Azure.Messaging.ServiceBus + DefaultAzureCredential + JSON serialization (9d81188)
 
 #### Code Changes
 
@@ -103,11 +106,19 @@ VI. **Save as Custom Skill**: To reuse this migration pattern in other projects,
 - `Controllers/CoursesController.cs` — `HttpPostedFileBase` → `IFormFile`, `Server.MapPath` → `IWebHostEnvironment.WebRootPath`
 - `Controllers/InstructorsController.cs` — `TryUpdateModel` → manual field binding
 - `Controllers/DepartmentsController.cs` — Updated usings and API
-- `Controllers/NotificationsController.cs` — Removed `JsonRequestBehavior.AllowGet`
+- `Controllers/NotificationsController.cs` — `GetNotifications()` made async (`Task<JsonResult>`); synchronous while-loop replaced with `await notificationService.ReceiveNotificationsAsync(10)`
 
 **Source Files — Services / Data (2)**
-- `Services/NotificationService.cs` — MSMQ (`System.Messaging`) → `ConcurrentQueue<Notification>` singleton
+- `Services/NotificationService.cs` — MSMQ (`System.Messaging`) → Azure Service Bus (`ServiceBusClient`) + `DefaultAzureCredential` + JSON serialization (Newtonsoft.Json); `XmlMessageFormatter` removed; `ReceiveNotificationsAsync` added
 - `Data/SchoolContextFactory.cs` — `ConfigurationManager` → `IConfiguration` parameter
+
+**Build/Configuration Files (3)**
+- `ContosoUniversity.csproj` — Added `Azure.Messaging.ServiceBus 7.19.0`, `Azure.Identity 1.14.0`
+- `appsettings.json` — Added `AzureServiceBus` section (`FullyQualifiedNamespace`, `QueueName`)
+- `Program.cs` — Updated comment for Service Bus singleton registration
+
+**Documentation (1)**
+- `NOTIFICATION_SYSTEM_README.md` — Updated to reflect Azure Service Bus architecture, RBAC setup, and Azure provisioning steps
 
 **View Files (13)**
 - `Views/_ViewImports.cshtml` — Created with `@addTagHelper` and namespace imports
@@ -146,19 +157,23 @@ VI. **Save as Custom Skill**: To reuse this migration pattern in other projects,
 - `Microsoft.EntityFrameworkCore.SqlServer 9.0.5`
 - `Microsoft.EntityFrameworkCore.Tools 9.0.5`
 - `Newtonsoft.Json 13.0.3`
+- `Azure.Messaging.ServiceBus 7.19.0`
+- `Azure.Identity 1.14.0`
 
 #### Tasks
 - `.NET Dependency Management Guide` — Used to guide conversion from `packages.config` to `PackageReference` format, SDK-style project file structure, and package version management
+- `Migrate Message Queue to Azure Service Bus` — Used to guide MSMQ → Azure Service Bus migration with `DefaultAzureCredential`, JSON message serialization, and async receiver pattern
+- `Managed Identity Migration Guide` — Used to ensure passwordless authentication via `DefaultAzureCredential` and correct `appsettings.json` configuration shape
 
 #### Knowledge Base Applied
 
-1 migration guideline was applied covering:
+3 migration guidelines were applied covering:
 
 | Migration Area | Description |
 |----------------|-------------|
-| Dependency Management | `packages.config` → SDK-style `PackageReference` conversion |
-| Project File Structure | Legacy MSBuild format → `<Project Sdk="Microsoft.NET.Sdk.Web">` |
-| Framework Migration | .NET Framework 4.8 → .NET 10 target framework identification |
+| Dependency Management | `packages.config` → SDK-style `PackageReference`; addition of `Azure.Messaging.ServiceBus` + `Azure.Identity` |
+| Messaging Migration | `System.Messaging.MessageQueue` + `XmlMessageFormatter` → `ServiceBusClient` + JSON serialization |
+| Authentication | Removed MSMQ local auth; added `DefaultAzureCredential` for passwordless Service Bus access |
 
 #### Issues Fixed During Migration
 | Severity | Issue | Resolution |
@@ -166,7 +181,7 @@ VI. **Save as Custom Skill**: To reuse this migration pattern in other projects,
 | Major | `TryUpdateModel` not available in ASP.NET Core MVC | Replaced with explicit form parameter binding in `InstructorsController.Edit` POST action |
 | Major | `Program.cs` missing explicit `using` directives (WebApplication not found) | Added `using Microsoft.AspNetCore.Builder` and other ASP.NET Core namespaces |
 | Minor | `Views/Departments/Create.cshtml` still had `@Scripts.Render("~/bundles/jqueryval")` | Replaced with `<partial name="_ValidationScriptsPartial" />` |
-| Minor | `HomeController.Unauthorized()` hides `ControllerBase.Unauthorized()` (CS0114 warning) | Non-breaking; left as-is (method serves a different purpose in this app) |
+| Minor | `NotificationService.cs` — CS8625 nullable warnings on `string userName = null` params | Changed to `string? userName = null` and `string? entityDisplayName` |
 
 </details>
 
