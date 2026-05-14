@@ -3,6 +3,135 @@
 > **Executive Summary**\
 > The ContosoUniversity application has been successfully migrated from ASP.NET MVC 5 targeting .NET Framework 4.8 to ASP.NET Core MVC targeting .NET 10, with the notification subsystem further modernized from MSMQ (and an interim in-memory queue) to Azure Service Bus using `DefaultAzureCredential` (Managed Identity). All legacy dependencies (System.Web, System.Messaging, BundleConfig, packages.config) have been removed; `Azure.Messaging.ServiceBus` and `Azure.Identity` replace the Windows-only messaging stack. The application compiles cleanly on .NET 10 with zero build errors, zero CVE vulnerabilities in all new packages, and zero completeness issues.
 
+---
+
+# Local File I/O to Azure Blob Storage Migration Result
+
+> **Executive Summary**\
+> All local file system operations in `Controllers/CoursesController.cs` have been successfully replaced with Azure Blob Storage using `BlobServiceClient` and `DefaultAzureCredential` (Managed Identity). The 8 incidents of `System.IO.File` / `System.IO.Directory` usage across `Create`, `Edit`, and `DeleteConfirmed` actions were migrated to `BlobContainerClient.CreateIfNotExists()`, `BlobClient.Upload()`, and `BlobClient.DeleteIfExists()`. The teaching material image path is now stored as the blob URI. No secrets or connection strings are used; Managed Identity provides passwordless access to Azure Blob Storage.
+
+## 1. Migration Improvements
+
+Successfully migrated from local `System.IO` file operations to Azure Blob Storage. The migration replaces `IWebHostEnvironment`-based local path construction and `System.IO.File`/`System.IO.Directory` calls with `BlobServiceClient` authenticated via `DefaultAzureCredential`. The `Azure.Storage.Blobs` 12.24.0 package was added, `BlobServiceClient` was registered as a singleton in `Program.cs`, and `appsettings.json` was updated with the storage endpoint and container name.
+
+| Area | Before | After | Improvement |
+|------|--------|-------|-------------|
+| File Storage | Local `wwwroot/Uploads/TeachingMaterials/` | Azure Blob Storage container `teaching-materials` | Cloud-native; scalable; no local disk dependency |
+| Authentication & Security | Local filesystem (no auth) | `DefaultAzureCredential` (Managed Identity) — no keys/connection strings | Passwordless; works with az login, Managed Identity, pod identity |
+| SDK/Dependencies | `System.IO` + `Microsoft.AspNetCore.Hosting` | `Azure.Storage.Blobs` 12.24.0 + `Azure.Identity` 1.14.0 | Cloud SDK; built-in retry, telemetry, and SAS generation |
+| File Path Storage | Relative local path `/Uploads/TeachingMaterials/{name}` | Full blob URI `https://<account>.blob.core.windows.net/<container>/<name>` | Globally addressable; no server-side path resolution needed |
+| Container Management | `Directory.Exists` + `Directory.CreateDirectory` | `BlobContainerClient.CreateIfNotExists()` | Idempotent; automatic provisioning on first upload |
+| File Deletion | `System.IO.File.Exists` + `System.IO.File.Delete` | `BlobClient.DeleteIfExists()` | Idempotent; no race condition; handles missing blobs gracefully |
+| DI Injection | `IWebHostEnvironment` for path construction | `BlobServiceClient` + `IConfiguration` | Proper cloud SDK injection; testable via DI |
+| Scalability | Single-server local storage | Geo-redundant Azure Blob Storage | High availability; replicated across Azure regions |
+
+## 2. Build and Validation
+
+All source files successfully compiled with `Azure.Storage.Blobs` 12.24.0 dependency. No test projects exist in the solution (0 tests — N/A). Build completed with zero errors.
+
+#### Build Validation
+| Field | Value |
+|-------|-------|
+| Status | ✅ Success |
+| Build Tool | dotnet build (.NET 10 / MSBuild) |
+| Result | 0 errors, 98 pre-existing nullable warnings (unchanged from before migration) |
+
+#### Test Validation
+| Field | Value |
+|-------|-------|
+| Status | ✅ N/A |
+| Total Tests | 0 |
+| Passed | 0 |
+| Failed | 0 |
+| Test Framework | N/A (no test projects in solution) |
+
+#### Code Quality Validation
+| Check | Status | Details |
+|-------|--------|---------|
+| CVE Scan | ✅ Success | `Azure.Storage.Blobs` 12.24.0 above affected < 12.13.0; `Azure.Identity` 1.14.0 above affected < 1.11.4; all others above vulnerable ranges — no action needed |
+| Consistency Check | ✅ Success | 0 Critical, 0 Major, 0 Minor — all file operations correctly translated to blob equivalents |
+| Completeness Check | ✅ Success | 0 issues — no `System.IO.File`, `System.IO.Directory`, `IWebHostEnvironment`, `FileStream`, or local path constructions remain |
+
+## 3. Recommended Next Steps
+
+I. **Provision Azure Storage Account**: Create an Azure Storage Account and note its blob service endpoint (`https://<account>.blob.core.windows.net`).
+
+II. **Configure appsettings.json**: Replace `<YOUR_STORAGE_ACCOUNT>` in `AzureStorageBlob:Endpoint` with your actual storage account name. The container `teaching-materials` will be auto-created on first upload.
+
+III. **Grant Managed Identity Access**: Assign the `Storage Blob Data Contributor` role to your app's Managed Identity on the storage account so `DefaultAzureCredential` can upload and delete blobs.
+
+IV. **Update Views**: If any Razor views render `TeachingMaterialImagePath` as an `<img src>`, they will now work directly with the full blob URI stored in the field — no changes required.
+
+V. **Create Pull Request**: After verifying the changes in staging, submit branch `appmod/dotnet-migration-20260514105229` for code review.
+
+VI. **Save as Custom Skill**: To reuse this migration pattern in other projects, save as `My Skill` from the `Tasks` section in the sidebar.
+
+## 4. Additional Details
+
+<details><summary>Click to expand for migration details</summary>
+
+#### Project Details
+| Field | Value |
+|-------|-------|
+| Session ID | `20260514105229` |
+| Migration executed by | xuycao |
+| Migration performed by | GitHub Copilot |
+| Project Pathname | `C:\Users\xuycao\dev\testrepo\dotnet-migration-copilot-samples\ContosoUniversity` |
+| Language | .NET (C#) |
+| Files modified | 4 |
+| Branch | `appmod/dotnet-migration-20260514105229` |
+
+#### Version Control Summary
+| Field | Value |
+|-------|-------|
+| Version Control System | Git |
+| Total Commits | 1 |
+| Uncommitted Changes | None |
+
+**Commits:**
+1. `f28d6b8` — Code migration completed: Migrate local file I/O to Azure Blob Storage - Replace System.IO.File/Directory in CoursesController with BlobServiceClient + DefaultAzureCredential; add Azure.Storage.Blobs 12.24.0; register BlobServiceClient singleton in Program.cs; add AzureStorageBlob config section
+
+#### Code Changes
+**Source Files (2)**
+- `Controllers/CoursesController.cs` — Removed `IWebHostEnvironment`; injected `BlobServiceClient` + `IConfiguration`; replaced `Directory.Exists/CreateDirectory` with `CreateIfNotExists()`; replaced `new FileStream` + `CopyTo` with `blobClient.Upload(stream)`; replaced `File.Exists/Delete` with `DeleteIfExists()`; path stored as blob URI
+- `Program.cs` — Added `using System;`, `using Azure.Storage.Blobs;`; registered `BlobServiceClient` singleton using `DefaultAzureCredential` and endpoint from config
+
+**Configuration Files (1)**
+- `appsettings.json` — Added `AzureStorageBlob` section with `Endpoint` and `ContainerName`
+
+**Build Files (1)**
+- `ContosoUniversity.csproj` — Added `<PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />`
+
+#### Dependency Changes
+**Removed:**
+- `Microsoft.AspNetCore.Hosting` injection (`IWebHostEnvironment`) — no longer needed for file path construction
+
+**Added:**
+- `Azure.Storage.Blobs` 12.24.0 — Azure Blob Storage SDK for upload, download, and delete operations
+
+#### Tasks
+- Migrate Storage to Azure Storage Blob
+
+#### Knowledge Base Applied
+
+1 migration guideline was applied covering:
+
+| Migration Area | Description |
+|----------------|-------------|
+| Blob Client Setup | `BlobServiceClient(Uri, DefaultAzureCredential)` — Managed Identity authentication pattern |
+| Container Management | `BlobContainerClient.CreateIfNotExists()` replaces `Directory.Exists/CreateDirectory` |
+| Upload | `BlobClient.Upload(stream, overwrite: true)` replaces `new FileStream` + `CopyTo` |
+| Delete | `BlobClient.DeleteIfExists()` replaces `File.Exists` + `File.Delete` |
+| Path Storage | Full blob URI (`blobClient.Uri.ToString()`) replaces relative local path |
+
+#### Issues Fixed During Migration
+| Severity | Issue | Resolution |
+|----------|-------|------------|
+| Minor | `using System;` missing in `Program.cs` preventing `Uri` resolution | Added `using System;` to usings block |
+| Minor | `Azure.Storage.Blobs` not present in `.csproj` after `dotnet add package` ran against stale csproj | Added `<PackageReference Include="Azure.Storage.Blobs" Version="12.24.0" />` directly to csproj |
+
+</details>
+
 ## 1. Migration Improvements
 
 Successfully migrated from ASP.NET MVC 5 (.NET Framework 4.8) to ASP.NET Core (.NET 10), then further migrated the notification subsystem from MSMQ (and interim in-memory queue) to Azure Service Bus. The migration replaces the legacy `System.Web`-based request pipeline with the ASP.NET Core middleware pipeline, replaces `Web.config`/`Global.asax` with `Program.cs`/`appsettings.json`, upgrades Entity Framework 6 to EF Core 9.0.5, replaces `System.Messaging.MessageQueue` (MSMQ) with `Azure.Messaging.ServiceBus.ServiceBusClient` authenticated via `DefaultAzureCredential`, and uses `Newtonsoft.Json` for message serialization. All dependencies, configuration, and implementation code have been updated.
