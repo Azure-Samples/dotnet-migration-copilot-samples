@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ContosoUniversity.Services;
-using ContosoUniversity.Models;
 using ContosoUniversity.Data;
 
 namespace ContosoUniversity.Controllers
@@ -16,34 +15,22 @@ namespace ContosoUniversity.Controllers
 
         // GET: api/notifications - Get pending notifications for admin
         [HttpGet]
-        public JsonResult GetNotifications()
+        public async Task<JsonResult> GetNotifications()
         {
-            var notifications = new List<Notification>();
-            
             try
             {
-                // Read all available notifications from the queue
-                Notification notification;
-                while ((notification = notificationService.ReceiveNotification()) != null)
-                {
-                    notifications.Add(notification);
-                    
-                    // Limit to prevent overwhelming the UI
-                    if (notifications.Count >= 10)
-                        break;
-                }
+                var notifications = await notificationService.ReceiveNotificationsAsync(10);
+                return Json(new {
+                    success = true,
+                    notifications,
+                    count = notifications.Count
+                });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error retrieving notifications: {ex.Message}");
                 return Json(new { success = false, message = "Error retrieving notifications" });
             }
-
-            return Json(new { 
-                success = true, 
-                notifications = notifications,
-                count = notifications.Count 
-            });
         }
 
         // POST: api/notifications/mark-read
@@ -69,4 +56,3 @@ namespace ContosoUniversity.Controllers
         }
     }
 }
-
