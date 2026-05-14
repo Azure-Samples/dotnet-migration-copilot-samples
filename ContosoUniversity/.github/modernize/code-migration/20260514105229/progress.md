@@ -57,16 +57,17 @@
 
 ## MSMQ → Azure Service Bus Migration (Session 20260514105229)
 
-- [ ] Add NuGet packages: `Azure.Messaging.ServiceBus` 7.19.0, `Azure.Identity` 1.14.0
-- [ ] Update `appsettings.json` - Add `AzureServiceBus` section (namespace + queue name)
-- [ ] Rewrite `Services/NotificationService.cs` - Replace in-memory ConcurrentQueue with Azure Service Bus + DefaultAzureCredential + JSON serialization
-- [ ] Update `Controllers/NotificationsController.cs` - Use async ReceiveNotificationsAsync
-- [ ] Update `Program.cs` - Update comment for Service Bus registration
-- [ ] Build Verification
-- [ ] CVE Check
-- [ ] Consistency Check
-- [ ] Completeness Check
-- [ ] Final Commit
+- [✅] Add NuGet packages: `Azure.Messaging.ServiceBus` 7.19.0, `Azure.Identity` 1.14.0
+- [✅] Update `appsettings.json` - Add `AzureServiceBus` section (namespace + queue name)
+- [✅] Rewrite `Services/NotificationService.cs` - Replace in-memory ConcurrentQueue with Azure Service Bus + DefaultAzureCredential + JSON serialization
+- [✅] Update `Controllers/NotificationsController.cs` - Use async ReceiveNotificationsAsync
+- [✅] Update `Program.cs` - Update comment for Service Bus registration
+- [✅] Build Verification - PASSED (0 errors, 98 pre-existing warnings)
+- [✅] CVE Check - PASSED (Azure.Identity 1.14.0, Azure.Messaging.ServiceBus 7.19.0, Newtonsoft.Json 13.0.3 — all above vulnerable ranges)
+- [✅] Consistency Check - PASSED (0 Critical, 0 Major, 0 Minor)
+- [✅] Completeness Check - PASSED (no System.Messaging, MessageQueue, XmlMessageFormatter, ConcurrentQueue, or MSMQ config references remaining)
+- [✅] Test Fix - N/A (no test projects)
+- [✅] Final Commit
 
 ## Issues Encountered (Previous Migration: .NET Framework → .NET 10)
 - **TryUpdateModel not available in ASP.NET Core**: Replaced with manual form field binding in InstructorsController.Edit POST action
