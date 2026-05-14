@@ -562,3 +562,141 @@ VI. **Save as Custom Skill**: To reuse this migration pattern, save as `My Skill
 | Minor | `ConnectionStrings.DefaultConnection` removed by previous Key Vault migration, leaving EF Core with null connection string | Restored with proper Azure SQL format in both settings files |
 
 </details>
+
+---
+
+# Secrets to Azure Key Vault Migration Result
+
+> **Executive Summary**\
+> Connection strings and application settings have been successfully migrated from `appsettings.json` / `appsettings.Development.json` to Azure Key Vault. ASP.NET Core is now configured to load secrets at startup via `Azure.Extensions.AspNetCore.Configuration.Secrets` with `DefaultAzureCredential` (Managed Identity). All hard-coded connection strings and Service Bus namespace settings have been removed from configuration files; the application reads them transparently from Key Vault at runtime without code changes to service or controller classes.
+
+## 1. Migration Improvements
+
+Successfully migrated from configuration-file-based secrets to Azure Key Vault. The migration removes `ConnectionStrings` and `AzureServiceBus` settings from `appsettings.json` and `appsettings.Development.json`, replacing them with Key Vault secrets loaded via `AddAzureKeyVault`. `Azure.Security.KeyVault.Secrets` 4.8.0 and `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2 were added; `Program.cs` now bootstraps the Key Vault configuration provider before any services are registered.
+
+| Area | Before | After | Improvement |
+|------|--------|-------|-------------|
+| Secret Storage | `appsettings.json` + `appsettings.Development.json` | Azure Key Vault | Centralised, audited, access-controlled secret management |
+| Authentication & Security | Plain-text secrets in config files | `DefaultAzureCredential` (Managed Identity) — no keys or passwords | Passwordless; zero secrets in source control |
+| SDK/Dependencies | None | `Azure.Security.KeyVault.Secrets` 4.8.0 + `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2 | Native .NET configuration integration; transparent secret resolution |
+| Configuration Loading | Static JSON files | Key Vault secrets merged into `IConfiguration` pipeline | Supports secret rotation without redeploy; dev override via local credentials |
+| Connection String Pattern | Hard-coded in `appsettings.json` | Secret name `ConnectionStrings--DefaultConnection` in Key Vault | Key Vault double-dash convention maps to ASP.NET Core nested config |
+| Service Bus Namespace | `AzureServiceBus:FullyQualifiedNamespace` in JSON | Secret `AzureServiceBus--FullyQualifiedNamespace` in Key Vault | Namespace is no longer visible in repository |
+| Blob Storage Config | Endpoint + container name in `appsettings.json` | Non-secret endpoint kept in config; `BlobServiceClient` uses Managed Identity | Only non-sensitive endpoint URL remains in config |
+| Maintainability | Per-file secret management across environments | Single Key Vault source of truth | Reduced secret sprawl; centralised rotation |
+
+## 2. Build and Validation
+
+All source files compiled successfully with the new Key Vault dependencies. No test projects exist in the solution (0 tests — N/A). Build completed with zero errors.
+
+#### Build Validation
+| Field | Value |
+| ----- | ----- |
+| Status | ✅ Success |
+| Build Tool | dotnet CLI (.NET 10) |
+| Result | 0 errors, 98 pre-existing nullable/override warnings (unchanged from baseline) |
+
+#### Test Validation
+| Field | Value |
+| ----- | ----- |
+| Status | ✅ N/A |
+| Total Tests | 0 |
+| Passed | 0 |
+| Failed | 0 |
+| Test Framework | No test projects in solution |
+
+#### Code Quality Validation
+| Check | Status | Details |
+| ----- | ------ | ------- |
+| CVE Scan | ✅ Success | `Azure.Security.KeyVault.Secrets` 4.8.0, `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2, `Azure.Storage.Blobs` 12.24.0, `Azure.Identity` 1.14.0, `Azure.Messaging.ServiceBus` 7.19.0 — all above vulnerable ranges; no action needed |
+| Consistency Check | ✅ Success | 0 Critical, 0 Major, 0 Minor |
+| Completeness Check | ✅ Success | 0 issues — no ConnectionStrings or hard-coded secrets remain in config files; `KeyVaultName` and `AddAzureKeyVault` confirmed |
+
+## 3. Recommended Next Steps
+
+I. **Create Azure Key Vault**: Provision an Azure Key Vault in your Azure subscription and grant your app's Managed Identity `Key Vault Secrets User` role.
+
+II. **Add Secrets to Key Vault**: Add the following secrets using the double-dash naming convention:
+   - `ConnectionStrings--DefaultConnection` → your Azure SQL connection string
+   - `AzureServiceBus--FullyQualifiedNamespace` → your Service Bus namespace
+   - `AzureServiceBus--QueueName` → your queue name
+
+III. **Set `KeyVaultName`**: Update the placeholder `<your-keyvault-name>` in `appsettings.json` and `appsettings.Development.json` with your actual Key Vault name before deploying.
+
+IV. **Local Development**: Use `az login` or Visual Studio credentials — `DefaultAzureCredential` will automatically pick them up so developers can access Key Vault locally without any code changes.
+
+V. **Create Pull Request**: After verifying the changes, submit branch `appmod/dotnet-migration-20260514105229` for code review.
+
+VI. **Save as Custom Skill**: To reuse this migration pattern in other projects, save as `My Skill` from the `Tasks` section in the sidebar.
+
+## 4. Additional Details
+<details><summary>Click to expand for migration details</summary>
+
+#### Project Details
+| Field | Value |
+| ----- | ----- |
+| Session ID | `20260514105229` |
+| Migration executed by | xuycao |
+| Migration performed by | GitHub Copilot |
+| Project Pathname | C:\Users\xuycao\dev\testrepo\dotnet-migration-copilot-samples\ContosoUniversity |
+| Language | Dotnet |
+| Files modified | 5 |
+| Branch created | `appmod/dotnet-migration-20260514105229` |
+
+#### Version Control Summary
+| Field | Value |
+| ----- | ----- |
+| Version Control System | Git |
+| Total Commits | 1 |
+| Uncommitted Changes | None |
+
+**Commits:**
+1. Code migration completed: Migrate secrets to Azure Key Vault - Add Azure.Security.KeyVault.Secrets + Azure.Extensions.AspNetCore.Configuration.Secrets packages, configure AddAzureKeyVault with DefaultAzureCredential in Program.cs, remove ConnectionStrings/AzureServiceBus from appsettings files
+
+#### Code Changes
+**Configuration Files (2)**
+- `appsettings.json` — removed `ConnectionStrings` + `AzureServiceBus`; added `KeyVaultName`; retained non-secret `AzureStorageBlob` endpoint
+- `appsettings.Development.json` — removed `ConnectionStrings`; added `KeyVaultName`
+
+**Source Files (1)**
+- `Program.cs` — added `builder.Configuration.AddAzureKeyVault(keyVaultUri, new DefaultAzureCredential())`; added `BlobServiceClient` DI registration with Managed Identity
+
+**Build Files (1)**
+- `ContosoUniversity.csproj` — added `Azure.Security.KeyVault.Secrets` 4.8.0, `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2, `Azure.Storage.Blobs` 12.24.0
+
+**Documentation (1)**
+- `.github/modernize/code-migration/20260514105229/progress.md` — updated with Key Vault migration progress
+
+#### Dependency Changes
+**Removed:**
+- None (no old Key Vault or legacy secret management packages were present)
+
+**Added:**
+- `Azure.Security.KeyVault.Secrets` 4.8.0
+- `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2
+- `Azure.Storage.Blobs` 12.24.0 (required by pre-existing `CoursesController` Blob Storage migration)
+
+#### Tasks
+- Migrate secrets (connection strings, Service Bus namespace) from `appsettings.json` to Azure Key Vault
+- Configure ASP.NET Core to load secrets from Key Vault via `Azure.Extensions.AspNetCore.Configuration.Secrets` with `DefaultAzureCredential`
+
+#### Knowledge Base Applied
+
+1 migration guideline was applied covering:
+
+| Migration Area | Description |
+| -------------- | ----------- |
+| Secret Storage | Remove hard-coded secrets from config files; store in Azure Key Vault |
+| Configuration Integration | `AddAzureKeyVault` with `DefaultAzureCredential` in `Program.cs` bootstrap |
+| Authentication | `DefaultAzureCredential` — supports CLI, Visual Studio, Managed Identity without code changes |
+| Dependency Management | `Azure.Security.KeyVault.Secrets` 4.8.0 + `Azure.Extensions.AspNetCore.Configuration.Secrets` 1.3.2 |
+
+#### Issues Fixed During Migration
+| Severity | Issue | Resolution |
+| -------- | ----- | ---------- |
+| Minor | `BlobServiceClient` referenced in `CoursesController` but `Azure.Storage.Blobs` package missing | Added `Azure.Storage.Blobs` 12.24.0 to fix pre-existing build errors |
+| Minor | `Program.cs` missing `using System;` for `Uri` type | Added `using System;` directive |
+| Minor | `BlobServiceClient` DI not registered in `Program.cs` | Added singleton registration with endpoint from `AzureStorageBlob:Endpoint` + `DefaultAzureCredential` |
+| Minor | Config files had duplicated content from repeated `Set-Content` appends | Used `[System.IO.File]::WriteAllText` to cleanly overwrite with correct single-copy content |
+
+</details>
