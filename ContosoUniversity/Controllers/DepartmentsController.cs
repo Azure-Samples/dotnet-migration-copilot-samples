@@ -1,176 +1,129 @@
-using System;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
+using ContosoUniversity.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ContosoUniversity.Controllers
+namespace ContosoUniversity.Controllers;
+
+public class DepartmentsController : Controller
 {
-    public class DepartmentsController : BaseController
+    private readonly SchoolContext _context;
+    private readonly INotificationService _notificationService;
+
+    public DepartmentsController(SchoolContext context, INotificationService notificationService)
     {
-        // GET: Departments - All roles can view
-        public ActionResult Index()
+        _context = context;
+        _notificationService = notificationService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var departments = await _context.Departments.Include(d => d.Administrator).ToListAsync();
+        return View(departments);
+    }
+
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
+            return BadRequest();
+
+        var department = await _context.Departments
+            .Include(d => d.Administrator)
+            .Include(d => d.Courses)
+            .FirstOrDefaultAsync(d => d.DepartmentID == id);
+
+        if (department == null)
+            return NotFound();
+
+        return View(department);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.InstructorID = new SelectList(await _context.Instructors.ToListAsync(), "ID", "FullName");
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Name,Budget,StartDate,InstructorID")] Department department)
+    {
+        if (ModelState.IsValid)
         {
-            var departments = db.Departments.Include(d => d.Administrator);
-            return View(departments.ToList());
+            _context.Departments.Add(department);
+            await _context.SaveChangesAsync();
+            await _notificationService.SendNotificationAsync("Department", department.DepartmentID.ToString(), department.Name, EntityOperation.Created);
+            return RedirectToAction(nameof(Index));
         }
+        ViewBag.InstructorID = new SelectList(await _context.Instructors.ToListAsync(), "ID", "FullName", department.InstructorID);
+        return View(department);
+    }
 
-        // GET: Departments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Department department = db.Departments.Find(id);
-            if (department == null)
-            {
-                return HttpNotFound();
-            }
-            return View(department);
-        }
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+            return BadRequest();
 
-        // GET: Departments/Create
-        public ActionResult Create()
-        {
-            ViewBag.InstructorID = new SelectList(db.Instructors, "ID", "FullName");
-            return View();
-        }
+        var department = await _context.Departments.FindAsync(id);
+        if (department == null)
+            return NotFound();
 
-        // POST: Departments/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,Budget,StartDate,InstructorID")] Department department)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Departments.Add(department);
-                db.SaveChanges();
-                
-                // Send notification for department creation
-                SendEntityNotification("Department", department.DepartmentID.ToString(), department.Name, EntityOperation.CREATE);
-                
-                return RedirectToAction("Index");
-            }
+        ViewBag.InstructorID = new SelectList(await _context.Instructors.ToListAsync(), "ID", "FullName", department.InstructorID);
+        return View(department);
+    }
 
-            ViewBag.InstructorID = new SelectList(db.Instructors, "ID", "FullName", department.InstructorID);
-            return View(department);
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("DepartmentID,Name,Budget,StartDate,InstructorID,RowVersion")] Department department)
+    {
+        if (id != department.DepartmentID)
+            return BadRequest();
 
-        // GET: Departments/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Department department = db.Departments.Find(id);
-            if (department == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.InstructorID = new SelectList(db.Instructors, "ID", "FullName", department.InstructorID);
-            return View(department);
-        }
-
-        // POST: Departments/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DepartmentID,Name,Budget,StartDate,InstructorID,RowVersion")] Department department)
+        if (ModelState.IsValid)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    db.Entry(department).State = EntityState.Modified;
-                    db.SaveChanges();
-                    
-                    // Send notification for department update
-                    SendEntityNotification("Department", department.DepartmentID.ToString(), department.Name, EntityOperation.UPDATE);
-                    
-                    return RedirectToAction("Index");
-                }
+                _context.Entry(department).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                await _notificationService.SendNotificationAsync("Department", department.DepartmentID.ToString(), department.Name, EntityOperation.Updated);
+                return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
-                var entry = ex.Entries.Single();
-                var clientValues = (Department)entry.Entity;
-                var databaseEntry = entry.GetDatabaseValues();
-                
-                if (databaseEntry == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Unable to save changes. The department was deleted by another user.");
-                }
-                else
-                {
-                    var databaseValues = (Department)databaseEntry.ToObject();
-                    
-                    if (databaseValues.Name != clientValues.Name)
-                        ModelState.AddModelError("Name", $"Current value: {databaseValues.Name}");
-                    if (databaseValues.Budget != clientValues.Budget)
-                        ModelState.AddModelError("Budget", $"Current value: {databaseValues.Budget:c}");
-                    if (databaseValues.StartDate != clientValues.StartDate)
-                        ModelState.AddModelError("StartDate", $"Current value: {databaseValues.StartDate:d}");
-                    if (databaseValues.InstructorID != clientValues.InstructorID)
-                    {
-                        var instructor = db.Instructors.Find(databaseValues.InstructorID);
-                        ModelState.AddModelError("InstructorID", $"Current value: {instructor?.FullName}");
-                    }
-                    
-                    ModelState.AddModelError(string.Empty, "The record you attempted to edit "
-                        + "was modified by another user after you got the original value. The "
-                        + "edit operation was canceled and the current values in the database "
-                        + "have been displayed. If you still want to edit this record, click "
-                        + "the Save button again. Otherwise click the Back to List hyperlink.");
-                    
-                    department.RowVersion = databaseValues.RowVersion;
-                }
+                if (!await _context.Departments.AnyAsync(d => d.DepartmentID == id))
+                    return NotFound();
+                throw;
             }
-            
-            ViewBag.InstructorID = new SelectList(db.Instructors, "ID", "FullName", department.InstructorID);
-            return View(department);
         }
+        ViewBag.InstructorID = new SelectList(await _context.Instructors.ToListAsync(), "ID", "FullName", department.InstructorID);
+        return View(department);
+    }
 
-        // GET: Departments/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Department department = db.Departments.Find(id);
-            if (department == null)
-            {
-                return HttpNotFound();
-            }
-            return View(department);
-        }
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+            return BadRequest();
 
-        // POST: Departments/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Department department = db.Departments.Find(id);
-            var departmentName = department.Name;
-            db.Departments.Remove(department);
-            db.SaveChanges();
-            
-            // Send notification for department deletion
-            SendEntityNotification("Department", id.ToString(), departmentName, EntityOperation.DELETE);
-            
-            return RedirectToAction("Index");
-        }
+        var department = await _context.Departments.Include(d => d.Administrator).FirstOrDefaultAsync(d => d.DepartmentID == id);
+        if (department == null)
+            return NotFound();
 
-        protected override void Dispose(bool disposing)
+        return View(department);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var department = await _context.Departments.FindAsync(id);
+        if (department != null)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            _context.Departments.Remove(department);
+            await _context.SaveChangesAsync();
+            await _notificationService.SendNotificationAsync("Department", id.ToString(), department.Name, EntityOperation.Deleted);
         }
+        return RedirectToAction(nameof(Index));
     }
 }

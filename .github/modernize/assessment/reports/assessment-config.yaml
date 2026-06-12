@@ -1,0 +1,5 @@
+dotnet:
+  assessmentDomains:
+    - cloud-readiness
+  targetComputeServices:
+    - AKS.Windows

@@ -1,65 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
 using ContosoUniversity.Services;
-using ContosoUniversity.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ContosoUniversity.Controllers
+namespace ContosoUniversity.Controllers;
+
+public class NotificationsController : Controller
 {
-    public class NotificationsController : BaseController
+    private readonly INotificationService _notificationService;
+
+    public NotificationsController(INotificationService notificationService)
     {
-        // GET: api/notifications - Get pending notifications for admin
-        [HttpGet]
-        public JsonResult GetNotifications()
-        {
-            var notifications = new List<Notification>();
-            
-            try
-            {
-                // Read all available notifications from the queue
-                Notification notification;
-                while ((notification = notificationService.ReceiveNotification()) != null)
-                {
-                    notifications.Add(notification);
-                    
-                    // Limit to prevent overwhelming the UI
-                    if (notifications.Count >= 10)
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error retrieving notifications: {ex.Message}");
-                return Json(new { success = false, message = "Error retrieving notifications" }, JsonRequestBehavior.AllowGet);
-            }
+        _notificationService = notificationService;
+    }
 
-            return Json(new { 
-                success = true, 
-                notifications = notifications,
-                count = notifications.Count 
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-        // POST: api/notifications/mark-read
-        [HttpPost]
-        public JsonResult MarkAsRead(int id)
-        {
-            try
-            {
-                notificationService.MarkAsRead(id);
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Error marking notification as read: {ex.Message}");
-                return Json(new { success = false, message = "Error updating notification" });
-            }
-        }
-
-        // GET: Notifications/Index - Admin notification dashboard
-        public ActionResult Index()
-        {
-            return View();
-        }
+    public async Task<IActionResult> Index(int count = 50)
+    {
+        var notifications = await _notificationService.GetRecentNotificationsAsync(count);
+        return View(notifications);
     }
 }

@@ -1,47 +1,53 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models.SchoolViewModels;
+using ContosoUniversity.Models;
+using ContosoUniversity.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Controllers
+namespace ContosoUniversity.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : BaseController
+    private readonly SchoolContext _context;
+    private readonly INotificationService _notificationService;
+
+    public HomeController(SchoolContext context, INotificationService notificationService)
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
+        _context = context;
+        _notificationService = notificationService;
+    }
 
-        public ActionResult About()
-        {
-            IQueryable<EnrollmentDateGroup> data = 
-                from student in db.Students
-                group student by student.EnrollmentDate into dateGroup
-                select new EnrollmentDateGroup()
-                {
-                    EnrollmentDate = dateGroup.Key,
-                    StudentCount = dateGroup.Count()
-                };
-            return View(data.ToList());
-        }
+    public IActionResult Index() => View();
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+    public async Task<IActionResult> About()
+    {
+        var data = await (from student in _context.Students
+            group student by student.EnrollmentDate into dateGroup
+            select new EnrollmentDateGroup
+            {
+                EnrollmentDate = dateGroup.Key,
+                StudentCount = dateGroup.Count()
+            }).ToListAsync();
 
-            return View();
-        }
+        return View(data);
+    }
 
-        public ActionResult Error()
-        {
-            return View();
-        }
+    public IActionResult Contact()
+    {
+        ViewBag.Message = "Your contact page.";
+        return View();
+    }
 
-        public ActionResult Unauthorized()
-        {
-            ViewBag.Message = "You don't have permission to access this resource.";
-            return View();
-        }
+    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel { RequestId = HttpContext.TraceIdentifier });
+    }
+
+    public IActionResult UnauthorizedAction()
+    {
+        ViewBag.Message = "You don't have permission to access this resource.";
+        return View();
     }
 }

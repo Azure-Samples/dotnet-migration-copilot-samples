@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Contoso University</title>
-    @Styles.Render("~/Content/css")
-    <link href="~/Content/notifications.css" rel="stylesheet" />
-    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/notifications.css" asp-append-version="true" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
-            @Html.ActionLink("Contoso University", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                        
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">Contoso University</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Students", "Index", "Students", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Courses", "Index", "Courses", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Instructors", "Index", "Instructors", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Departments", "Index", "Departments", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Notifications", "Index", "Notifications", null, new { @class = "nav-link", title = "Notification Dashboard" })</li>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Students" asp-action="Index">Students</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Courses" asp-action="Index">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Instructors" asp-action="Index">Instructors</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Departments" asp-action="Index">Departments</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Notifications" asp-action="Index" title="Notification Dashboard">Notifications</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container body-content" style="margin-top: 70px;">
         @RenderBody()
         <hr />
         <footer>
@@ -34,9 +36,9 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/Scripts/notifications.js"></script>
-    @RenderSection("scripts", required: false)
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/notifications.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

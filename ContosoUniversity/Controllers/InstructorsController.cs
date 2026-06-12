@@ -1,261 +1,132 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Net;
-using System.Web.Mvc;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
-using ContosoUniversity.Models.SchoolViewModels;
+using ContosoUniversity.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace ContosoUniversity.Controllers
+namespace ContosoUniversity.Controllers;
+
+public class InstructorsController : Controller
 {
-    public class InstructorsController : BaseController
+    private readonly SchoolContext _context;
+    private readonly INotificationService _notificationService;
+
+    public InstructorsController(SchoolContext context, INotificationService notificationService)
     {
-        // GET: Instructors - All roles can view
-        public ActionResult Index(int? id, int? courseID)
+        _context = context;
+        _notificationService = notificationService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var instructors = await _context.Instructors
+            .Include(i => i.OfficeAssignment)
+            .Include(i => i.CourseAssignments)
+            .ThenInclude(ca => ca.Course)
+            .ToListAsync();
+        return View(instructors);
+    }
+
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null)
+            return BadRequest();
+
+        var instructor = await _context.Instructors
+            .Include(i => i.OfficeAssignment)
+            .Include(i => i.CourseAssignments)
+            .ThenInclude(ca => ca.Course)
+            .FirstOrDefaultAsync(i => i.ID == id);
+
+        if (instructor == null)
+            return NotFound();
+
+        return View(instructor);
+    }
+
+    public async Task<IActionResult> Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("LastName,FirstMidName,HireDate")] Instructor instructor)
+    {
+        if (ModelState.IsValid)
         {
-            var viewModel = new InstructorIndexData();
-            viewModel.Instructors = db.Instructors
-                .Include(i => i.OfficeAssignment)
-                .Include(i => i.CourseAssignments)
-                    .ThenInclude(c => c.Course)
-                        .ThenInclude(d => d.Department)
-                .OrderBy(i => i.LastName);
-
-            if (id != null)
-            {
-                ViewBag.InstructorID = id.Value;
-                viewModel.Courses = viewModel.Instructors.Where(
-                    i => i.ID == id.Value).Single().CourseAssignments.Select(s => s.Course);
-            }
-
-            if (courseID != null)
-            {
-                ViewBag.CourseID = courseID.Value;
-                viewModel.Enrollments = viewModel.Courses.Where(
-                    x => x.CourseID == courseID).Single().Enrollments;
-            }
-
-            return View(viewModel);
+            _context.Instructors.Add(instructor);
+            await _context.SaveChangesAsync();
+            await _notificationService.SendNotificationAsync("Instructor", instructor.ID.ToString(), $"{instructor.FirstMidName} {instructor.LastName}", EntityOperation.Created);
+            return RedirectToAction(nameof(Index));
         }
+        return View(instructor);
+    }
 
-        // GET: Instructors/Details/5 - All roles can view details
-        public ActionResult Details(int? id)
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+            return BadRequest();
+
+        var instructor = await _context.Instructors
+            .Include(i => i.OfficeAssignment)
+            .FirstOrDefaultAsync(i => i.ID == id);
+
+        if (instructor == null)
+            return NotFound();
+
+        return View(instructor);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,HireDate")] Instructor instructor)
+    {
+        if (id != instructor.ID)
+            return BadRequest();
+
+        if (ModelState.IsValid)
         {
-            if (id == null)
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _context.Entry(instructor).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                await _notificationService.SendNotificationAsync("Instructor", instructor.ID.ToString(), $"{instructor.FirstMidName} {instructor.LastName}", EntityOperation.Updated);
+                return RedirectToAction(nameof(Index));
             }
-            Instructor instructor = db.Instructors.Find(id);
-            if (instructor == null)
+            catch (DbUpdateConcurrencyException)
             {
-                return HttpNotFound();
-            }
-            return View(instructor);
-        }
-
-        // GET: Instructors/Create
-        public ActionResult Create()
-        {
-            var instructor = new Instructor();
-            instructor.CourseAssignments = new List<CourseAssignment>();
-            PopulateAssignedCourseData(instructor);
-            return View(instructor);
-        }
-
-        // POST: Instructors/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "LastName,FirstMidName,HireDate,OfficeAssignment")] Instructor instructor, string[] selectedCourses)
-        {
-            if (selectedCourses != null)
-            {
-                instructor.CourseAssignments = new List<CourseAssignment>();
-                foreach (var course in selectedCourses)
-                {
-                    var courseToAdd = new CourseAssignment { InstructorID = instructor.ID, CourseID = int.Parse(course) };
-                    instructor.CourseAssignments.Add(courseToAdd);
-                }
-            }
-            if (ModelState.IsValid)
-            {
-                db.Instructors.Add(instructor);
-                db.SaveChanges();
-                
-                // Send notification for instructor creation
-                SendEntityNotification("Instructor", instructor.ID.ToString(), EntityOperation.CREATE);
-                
-                return RedirectToAction("Index");
-            }
-            PopulateAssignedCourseData(instructor);
-            return View(instructor);
-        }
-
-        // GET: Instructors/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Instructor instructor = db.Instructors
-                .Include(i => i.OfficeAssignment)
-                .Include(i => i.CourseAssignments)
-                    .ThenInclude(c => c.Course)
-                .Where(i => i.ID == id)
-                .Single();
-            PopulateAssignedCourseData(instructor);
-            if (instructor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(instructor);
-        }
-
-        private void PopulateAssignedCourseData(Instructor instructor)
-        {
-            var allCourses = db.Courses;
-            var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseID));
-            var viewModel = new List<AssignedCourseData>();
-            foreach (var course in allCourses)
-            {
-                viewModel.Add(new AssignedCourseData
-                {
-                    CourseID = course.CourseID,
-                    Title = course.Title,
-                    Assigned = instructorCourses.Contains(course.CourseID)
-                });
-            }
-            ViewBag.Courses = viewModel;
-        }
-
-        // POST: Instructors/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, string[] selectedCourses)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var instructorToUpdate = db.Instructors
-               .Include(i => i.OfficeAssignment)
-               .Include(i => i.CourseAssignments)
-                   .ThenInclude(c => c.Course)
-               .Where(i => i.ID == id)
-               .Single();
-
-            if (TryUpdateModel(instructorToUpdate, "",
-               new string[] { "LastName", "FirstMidName", "HireDate", "OfficeAssignment" }))
-            {
-                try
-                {
-                    if (String.IsNullOrWhiteSpace(instructorToUpdate.OfficeAssignment.Location))
-                    {
-                        instructorToUpdate.OfficeAssignment = null;
-                    }
-
-                    UpdateInstructorCourses(selectedCourses, instructorToUpdate);
-
-                    db.SaveChanges();
-                    
-                    // Send notification for instructor update
-                    SendEntityNotification("Instructor", instructorToUpdate.ID.ToString(), EntityOperation.UPDATE);
-
-                    return RedirectToAction("Index");
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-                }
-            }
-            PopulateAssignedCourseData(instructorToUpdate);
-            return View(instructorToUpdate);
-        }
-
-        private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
-        {
-            if (selectedCourses == null)
-            {
-                instructorToUpdate.CourseAssignments = new List<CourseAssignment>();
-                return;
-            }
-
-            var selectedCoursesHS = new HashSet<string>(selectedCourses);
-            var instructorCourses = new HashSet<int>
-                (instructorToUpdate.CourseAssignments.Select(c => c.Course.CourseID));
-            foreach (var course in db.Courses)
-            {
-                if (selectedCoursesHS.Contains(course.CourseID.ToString()))
-                {
-                    if (!instructorCourses.Contains(course.CourseID))
-                    {
-                        instructorToUpdate.CourseAssignments.Add(new CourseAssignment { InstructorID = instructorToUpdate.ID, CourseID = course.CourseID });
-                    }
-                }
-                else
-                {
-
-                    if (instructorCourses.Contains(course.CourseID))
-                    {
-                        CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.SingleOrDefault(i => i.CourseID == course.CourseID);
-                        db.Entry(courseToRemove).State = EntityState.Deleted;
-                    }
-                }
+                if (!await _context.Instructors.AnyAsync(i => i.ID == id))
+                    return NotFound();
+                throw;
             }
         }
+        return View(instructor);
+    }
 
-        // GET: Instructors/Delete/5
-        public ActionResult Delete(int? id)
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+            return BadRequest();
+
+        var instructor = await _context.Instructors.FirstOrDefaultAsync(i => i.ID == id);
+        if (instructor == null)
+            return NotFound();
+
+        return View(instructor);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var instructor = await _context.Instructors.FindAsync(id);
+        if (instructor != null)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Instructor instructor = db.Instructors.Find(id);
-            if (instructor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(instructor);
+            _context.Instructors.Remove(instructor);
+            await _context.SaveChangesAsync();
+            await _notificationService.SendNotificationAsync("Instructor", id.ToString(), $"{instructor.FirstMidName} {instructor.LastName}", EntityOperation.Deleted);
         }
-
-        // POST: Instructors/Delete/5 - Only admins can delete instructors
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Instructor instructor = db.Instructors
-              .Include(i => i.OfficeAssignment)
-              .Where(i => i.ID == id)
-              .Single();
-
-            db.Instructors.Remove(instructor);
-
-            var department = db.Departments
-                .Where(d => d.InstructorID == id)
-                .SingleOrDefault();
-            if (department != null)
-            {
-                department.InstructorID = null;
-            }
-
-            db.SaveChanges();
-            
-            // Send notification for instructor deletion
-            SendEntityNotification("Instructor", id.ToString(), EntityOperation.DELETE);
-            
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        return RedirectToAction(nameof(Index));
     }
 }

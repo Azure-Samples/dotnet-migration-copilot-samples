@@ -1,3 +1,5 @@
+@model PaginatedList<Student>
+<h1>Students</h1>
 @model PaginatedList<ContosoUniversity.Models.Student>
 
 @{
@@ -7,31 +9,38 @@
 <h2>Students</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
+<form asp-action="Index" method="get" class="mb-3">
 
 @using (Html.BeginForm("Index", "Students", FormMethod.Get))
 {
     <div class="form-actions no-color">
-        <p>
-            Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            @Html.ActionLink("Back to Full List", "Index")
-        </p>
+    <div class="input-group">
+        <input type="text" name="SearchString" value="@(ViewBag.CurrentFilter as string)" placeholder="Search by name..." class="form-control" />
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
     </div>
-}
+</form>
+<table class="table table-striped">
+    <thead class="table-dark">
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.ActionLink("Last Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
+                <a asp-action="Index" asp-route-sortOrder="@(ViewBag.NameSortParm)" asp-route-searchString="@(ViewBag.CurrentFilter)">
+                    Last Name
+                </a>
             </th>
             <th>
                 First Name
             </th>
             <th>
-                @Html.ActionLink("Enrollment Date", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+                <a asp-action="Index" asp-route-sortOrder="@(ViewBag.EnrollmentDateSortParm)" asp-route-searchString="@(ViewBag.CurrentFilter)">
+                    Enrollment Date
+                </a>
             </th>
             <th>Actions</th>
         </tr>
@@ -41,33 +50,26 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
+                    @item.LastName
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FirstMidName)
+                    @item.FirstMidName
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EnrollmentDate)
+                    @item.EnrollmentDate?.ToString("yyyy-MM-dd")
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-info btn-sm" })
-                    @Html.Raw(" | ")
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-warning btn-sm" })
-                    @Html.Raw(" | ")
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-danger btn-sm" })
+                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+</table>
 
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-@Html.ActionLink("Previous", "Index", new { 
-    sortOrder = ViewBag.CurrentSort, 
     page = Model.PageIndex - 1, 
     currentFilter = ViewBag.CurrentFilter 
 }, new { @class = "btn btn-default " + prevDisabled })
