@@ -1,0 +1,2280 @@
+{
+  "packageGovernance": {
+    "totalDistinctPackages": 45,
+    "totalVersionDriftInstances": 0,
+    "targetFramework": "net10.0",
+    "packages": [
+      {
+        "name": "Antlr",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "3.4.1.9004",
+        "isCompatible": true,
+        "description": "Needs to be replaced with Replace with new package Antlr4=4.6.6",
+        "versions": [
+          {
+            "version": "3.4.1.9004",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "bootstrap",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "5.3.3",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "5.3.3",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "jQuery",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "3.7.1",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "3.7.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "jQuery.Validation",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "1.21.0",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "1.21.0",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.AspNet.Mvc",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "5.2.9",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "5.2.9",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.AspNet.Razor",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "3.2.9",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "3.2.9",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.AspNet.Web.Optimization",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "1.1.3",
+        "isCompatible": false,
+        "description": "NuGet package is incompatible",
+        "versions": [
+          {
+            "version": "1.1.3",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.AspNet.WebPages",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "3.2.9",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "3.2.9",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.Bcl.AsyncInterfaces",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "1.1.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Bcl.HashCode",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "6.0.0",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "1.1.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "6.0.0"
+        }
+      },
+      {
+        "name": "Microsoft.CodeDom.Providers.DotNetCompilerPlatform",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "2.0.1",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "2.0.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.Data.SqlClient",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "7.1.0",
+        "isCompatible": true,
+        "description": "NuGet package contains security vulnerability",
+        "versions": [
+          {
+            "version": "2.1.4",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "7.1.0"
+        }
+      },
+      {
+        "name": "Microsoft.Data.SqlClient.SNI.runtime",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "2.1.1",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "2.1.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore.Abstractions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore.Analyzers",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore.Relational",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore.SqlServer",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.EntityFrameworkCore.Tools",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Caching.Abstractions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Caching.Memory",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Configuration",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Configuration.Abstractions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Configuration.Binder",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.DependencyInjection",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Logging",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.Abstractions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Options",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Extensions.Primitives",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "3.1.32",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "Microsoft.Identity.Client",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.21.1",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "4.21.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.jQuery.Unobtrusive.Validation",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.0.0",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "4.0.0",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Microsoft.Web.Infrastructure",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "2.0.1",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "2.0.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Modernizr",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "2.6.2",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "2.6.2",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "NETStandard.Library",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "2.0.3",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "2.0.3",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "Newtonsoft.Json",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "13.0.4",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "13.0.3",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "13.0.4"
+        }
+      },
+      {
+        "name": "System.Buffers",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.5.1",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "4.5.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "System.Collections.Immutable",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "1.7.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "System.ComponentModel.Annotations",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.7.0",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "4.7.0",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "System.Diagnostics.DiagnosticSource",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "10.0.12",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "4.7.1",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "10.0.12"
+        }
+      },
+      {
+        "name": "System.Memory",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.5.4",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "4.5.4",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "System.Numerics.Vectors",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.5.0",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "4.5.0",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "System.Runtime.CompilerServices.Unsafe",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "6.1.2",
+        "isCompatible": true,
+        "description": "NuGet package upgrade is recommended",
+        "versions": [
+          {
+            "version": "4.5.3",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": false
+          }
+        ],
+        "upgrade": {
+          "newVersion": "6.1.2"
+        }
+      },
+      {
+        "name": "System.Threading.Tasks.Extensions",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "4.5.4",
+        "isCompatible": true,
+        "description": "NuGet package functionality is included with framework reference",
+        "versions": [
+          {
+            "version": "4.5.4",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      },
+      {
+        "name": "WebGrease",
+        "totalProjectCount": 1,
+        "distinctVersionCount": 1,
+        "recommendedVersion": "1.5.2",
+        "isCompatible": true,
+        "description": "",
+        "versions": [
+          {
+            "version": "1.5.2",
+            "projects": [
+              "ContosoUniversity"
+            ],
+            "isRecommended": true
+          }
+        ]
+      }
+    ]
+  },
+  "projects": [
+    {
+      "name": "ContosoUniversity",
+      "path": "ContosoUniversity.csproj",
+      "isSdk": false,
+      "currentFrameworks": [
+        "net48"
+      ],
+      "targetFramework": "net10.0",
+      "dependencies": {
+        "packages": [
+          {
+            "name": "Antlr",
+            "version": "3.4.1.9004",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "Needs to be replaced with Replace with new package Antlr4=4.6.6",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "bootstrap",
+            "version": "5.3.3",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "jQuery",
+            "version": "3.7.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "jQuery.Validation",
+            "version": "1.21.0",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.AspNet.Mvc",
+            "version": "5.2.9",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.AspNet.Razor",
+            "version": "3.2.9",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.AspNet.Web.Optimization",
+            "version": "1.1.3",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package is incompatible",
+            "compatibility": "newVersionNeeded",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.AspNet.WebPages",
+            "version": "3.2.9",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.Bcl.AsyncInterfaces",
+            "version": "1.1.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Bcl.HashCode",
+            "version": "1.1.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "6.0.0",
+            "upgrade": {
+              "newVersion": "6.0.0"
+            }
+          },
+          {
+            "name": "Microsoft.CodeDom.Providers.DotNetCompilerPlatform",
+            "version": "2.0.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.Data.SqlClient",
+            "version": "2.1.4",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package contains security vulnerability",
+            "compatibility": "valid",
+            "recommendedVersion": "7.1.0",
+            "upgrade": {
+              "newVersion": "7.1.0"
+            }
+          },
+          {
+            "name": "Microsoft.Data.SqlClient.SNI.runtime",
+            "version": "2.1.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.Identity.Client",
+            "version": "4.21.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Analyzers",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.SqlServer",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Tools",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Caching.Memory",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration.Binder",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Logging",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Options",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.Extensions.Primitives",
+            "version": "3.1.32",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "Microsoft.jQuery.Unobtrusive.Validation",
+            "version": "4.0.0",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Microsoft.Web.Infrastructure",
+            "version": "2.0.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Modernizr",
+            "version": "2.6.2",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "NETStandard.Library",
+            "version": "2.0.3",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "Newtonsoft.Json",
+            "version": "13.0.3",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "13.0.4",
+            "upgrade": {
+              "newVersion": "13.0.4"
+            }
+          },
+          {
+            "name": "System.Buffers",
+            "version": "4.5.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "System.Collections.Immutable",
+            "version": "1.7.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "System.ComponentModel.Annotations",
+            "version": "4.7.0",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "System.Diagnostics.DiagnosticSource",
+            "version": "4.7.1",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "10.0.12",
+            "upgrade": {
+              "newVersion": "10.0.12"
+            }
+          },
+          {
+            "name": "System.Memory",
+            "version": "4.5.4",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "System.Numerics.Vectors",
+            "version": "4.5.0",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "System.Runtime.CompilerServices.Unsafe",
+            "version": "4.5.3",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package upgrade is recommended",
+            "compatibility": "valid",
+            "recommendedVersion": "6.1.2",
+            "upgrade": {
+              "newVersion": "6.1.2"
+            }
+          },
+          {
+            "name": "System.Threading.Tasks.Extensions",
+            "version": "4.5.4",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "NuGet package functionality is included with framework reference",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          },
+          {
+            "name": "WebGrease",
+            "version": "1.5.2",
+            "isTransitive": false,
+            "isGlobal": false,
+            "isImplicit": false,
+            "definedIn": [
+              {
+                "path": "packages.config"
+              }
+            ],
+            "description": "",
+            "compatibility": "valid",
+            "recommendedVersion": ""
+          }
+        ],
+        "assemblies": [
+          {
+            "name": "Microsoft.CSharp",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Data",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Data.DataSetExtensions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Drawing",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.DynamicData",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Entity",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.ApplicationServices",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.ComponentModel.DataAnnotations",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Extensions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Routing",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Xml",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Configuration",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Services",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.EnterpriseServices",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Messaging",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "netstandard",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Web.Infrastructure",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Web.Infrastructure.2.0.1\\lib\\net40\\Microsoft.Web.Infrastructure.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Net.Http",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Net.Http.WebRequest",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Helpers",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.WebPages.3.2.9\\lib\\net45\\System.Web.Helpers.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Mvc",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.Mvc.5.2.9\\lib\\net45\\System.Web.Mvc.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Optimization",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.Web.Optimization.1.1.3\\lib\\net40\\System.Web.Optimization.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.Razor",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.Razor.3.2.9\\lib\\net45\\System.Web.Razor.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.WebPages",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.WebPages.3.2.9\\lib\\net45\\System.Web.WebPages.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.WebPages.Deployment",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.WebPages.3.2.9\\lib\\net45\\System.Web.WebPages.Deployment.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Web.WebPages.Razor",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.AspNet.WebPages.3.2.9\\lib\\net45\\System.Web.WebPages.Razor.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Newtonsoft.Json",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Newtonsoft.Json.13.0.3\\lib\\net45\\Newtonsoft.Json.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Xml.Linq",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "compatibility": "valid"
+          },
+          {
+            "name": "WebGrease",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\WebGrease.1.5.2\\lib\\WebGrease.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Antlr3.Runtime",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Antlr.3.4.1.9004\\lib\\Antlr3.Runtime.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.EntityFrameworkCore.3.1.32\\lib\\netstandard2.0\\Microsoft.EntityFrameworkCore.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.EntityFrameworkCore.Abstractions.3.1.32\\lib\\netstandard2.0\\Microsoft.EntityFrameworkCore.Abstractions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.SqlServer",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.EntityFrameworkCore.SqlServer.3.1.32\\lib\\netstandard2.0\\Microsoft.EntityFrameworkCore.SqlServer.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.EntityFrameworkCore.Relational",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.EntityFrameworkCore.Relational.3.1.32\\lib\\netstandard2.0\\Microsoft.EntityFrameworkCore.Relational.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Data.SqlClient",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Data.SqlClient.2.1.4\\lib\\net46\\Microsoft.Data.SqlClient.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Bcl.AsyncInterfaces",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Bcl.AsyncInterfaces.1.1.1\\lib\\netstandard2.0\\Microsoft.Bcl.AsyncInterfaces.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Threading.Tasks.Extensions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\System.Threading.Tasks.Extensions.4.5.4\\lib\\net461\\System.Threading.Tasks.Extensions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.DependencyInjection.Abstractions.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.DependencyInjection",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.DependencyInjection.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.DependencyInjection.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Caching.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Caching.Abstractions.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Caching.Abstractions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Caching.Memory",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Caching.Memory.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Caching.Memory.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Configuration.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Configuration.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Configuration.Abstractions.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Configuration.Abstractions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Configuration.Binder",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Configuration.Binder.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Configuration.Binder.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Logging",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Logging.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Logging.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Logging.Abstractions",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Logging.Abstractions.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Logging.Abstractions.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Options",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Options.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Options.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Extensions.Primitives",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Extensions.Primitives.3.1.32\\lib\\netstandard2.0\\Microsoft.Extensions.Primitives.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Diagnostics.DiagnosticSource",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\System.Diagnostics.DiagnosticSource.4.7.1\\lib\\net46\\System.Diagnostics.DiagnosticSource.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.Collections.Immutable",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\System.Collections.Immutable.1.7.1\\lib\\netstandard2.0\\System.Collections.Immutable.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "System.ComponentModel.Annotations",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\System.ComponentModel.Annotations.4.7.0\\lib\\net461\\System.ComponentModel.Annotations.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Identity.Client",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Identity.Client.4.21.1\\lib\\net461\\Microsoft.Identity.Client.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.Bcl.HashCode",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.Bcl.HashCode.1.1.1\\lib\\net461\\Microsoft.Bcl.HashCode.dll",
+            "compatibility": "valid"
+          },
+          {
+            "name": "Microsoft.CodeDom.Providers.DotNetCompilerPlatform",
+            "version": "",
+            "isTransitive": false,
+            "definedIn": [
+              {
+                "path": "ContosoUniversity.csproj"
+              }
+            ],
+            "physicalPath": "packages\\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\\lib\\net45\\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll",
+            "compatibility": "valid"
+          }
+        ],
+        "projectReferences": [],
+        "frameworkReferences": []
+      },
+      "imports": [
+        {
+          "path": "ContosoUniversity.csproj.user",
+          "isLocal": true
+        }
+      ]
+    }
+  ]
+}
