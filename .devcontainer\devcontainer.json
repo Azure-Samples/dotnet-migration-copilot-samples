@@ -1,0 +1,12 @@
+{
+  "name": "ContosoUniversity migration workspace",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:2-10.0-noble",
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp"
+      ]
+    }
+  }
+}
